@@ -22,8 +22,9 @@ public class MutualFundServiceImpl implements MutualFundService {
 
 	@Override
 	public MutualFund addMutualFund(MutualFund mutualFund) {
-		LOGGER.log(Level.INFO, "Adding mutual fund");
+		LOGGER.log(Level.INFO, "Adding mutual fund {0}", mutualFund);
 		MutualFund savedMutualFund = mutualFundRepository.save(mutualFund);
+		System.out.println(savedMutualFund);
 		LOGGER.log(Level.INFO, "MutualFund added sucessfully");
 		return savedMutualFund;
 	}

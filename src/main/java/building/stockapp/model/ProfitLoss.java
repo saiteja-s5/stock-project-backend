@@ -1,10 +1,7 @@
 package building.stockapp.model;
 
-import java.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,33 +26,15 @@ public class ProfitLoss {
 	@Column(name = "stock_name", length = 20, nullable = false)
 	private String stockName;
 
-	@Column(name = "bought_date", nullable = false)
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDate boughtDate;
+	@Embedded
+	private Bought bought;
 
-	@Column(name = "bought_price", nullable = false)
-	private Double boughtPrice;
-
-	@Column(name = "sold_date", nullable = false)
-	@JsonFormat(pattern = "yyyy-MM-dd")
-	private LocalDate soldDate;
-
-	@Column(name = "sold_price", nullable = false)
-	private Double soldPrice;
-
-	public ProfitLoss(String stockName, LocalDate boughtDate, Double boughtPrice, LocalDate soldDate,
-			Double soldPrice) {
-		super();
-		this.stockName = stockName;
-		this.boughtDate = boughtDate;
-		this.boughtPrice = boughtPrice;
-		this.soldDate = soldDate;
-		this.soldPrice = soldPrice;
-	}
+	@Embedded
+	private Sold sold;
 
 	@Override
 	public String toString() {
-		return profitLossId + "," + stockName + "," + boughtDate + "," + boughtPrice + "," + soldDate + "," + soldPrice;
+		return profitLossId + "," + stockName + "," + bought + "," + sold;
 	}
 
 }

@@ -22,7 +22,7 @@ public class ProfitLossServiceImpl implements ProfitLossService {
 
 	@Override
 	public ProfitLoss addProfitLoss(ProfitLoss profitLoss) {
-		LOGGER.log(Level.INFO, "Adding Profit/Loss");
+		LOGGER.log(Level.INFO, "Adding Profit/Loss {0}", profitLoss);
 		ProfitLoss savedProfitLoss = profitLossRepository.save(profitLoss);
 		LOGGER.log(Level.INFO, "ProfitLoss added sucessfully");
 		return savedProfitLoss;

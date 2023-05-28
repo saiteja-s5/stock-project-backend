@@ -30,7 +30,7 @@ public class ProfitLossController {
 
 	@PostMapping("/")
 	public ResponseEntity<ProfitLoss> addProfitLoss(@RequestBody ProfitLoss profitLoss) {
-		LOGGER.log(Level.INFO, "Request received to add Profit/Loss");
+		LOGGER.log(Level.INFO, "Request received to add Profit/Loss {0}", profitLoss);
 		return new ResponseEntity<>(profitLossService.addProfitLoss(profitLoss), HttpStatus.CREATED);
 	}
 
