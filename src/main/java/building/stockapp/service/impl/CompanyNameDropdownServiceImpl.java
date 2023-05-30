@@ -39,7 +39,8 @@ public class CompanyNameDropdownServiceImpl implements CompanyNameDropdownServic
 	@Override
 	public List<CompanyNameDropdown> getCompanyNameDropdowns() {
 		LOGGER.log(Level.INFO, "Getting all added company dropdowns");
-		List<CompanyNameDropdown> savedCompanyNameDropdowns = companyNameDropdownRepository.findAll();
+		List<CompanyNameDropdown> savedCompanyNameDropdowns = companyNameDropdownRepository
+				.findAllByOrderByCompanyNameAsc();
 		LOGGER.log(Level.INFO, "Retrieved {0} company dropdowns sucessfully", savedCompanyNameDropdowns.size());
 		return savedCompanyNameDropdowns;
 	}
