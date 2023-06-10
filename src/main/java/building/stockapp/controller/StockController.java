@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import building.stockapp.dto.StockTableRowDto;
 import building.stockapp.model.Stock;
 import building.stockapp.service.StockService;
 
@@ -37,9 +38,9 @@ public class StockController {
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<Stock>> getStocks() {
+	public ResponseEntity<List<StockTableRowDto>> getStocksForTable() {
 		LOGGER.log(Level.INFO, "Request received to get all added stocks");
-		return new ResponseEntity<>(stockService.getStocks(), HttpStatus.OK);
+		return new ResponseEntity<>(stockService.getStocksForTable(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{stockId}")

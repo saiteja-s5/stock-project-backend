@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
+import building.stockapp.dto.StockTableRowDto;
 import building.stockapp.exception.StockNotFoundException;
 import building.stockapp.model.Stock;
 import building.stockapp.repository.StockRepository;
@@ -50,6 +51,14 @@ public class StockServiceImpl implements StockService {
 		LOGGER.log(Level.INFO, "Deleting Stock with Id {0}", stockId);
 		stockRepository.deleteById(stockId);
 		LOGGER.log(Level.INFO, "Deleted stock sucessfully");
+	}
+
+	@Override
+	public List<StockTableRowDto> getStocksForTable() {
+		LOGGER.log(Level.INFO, "Getting all added stocks");
+		List<StockTableRowDto> savedStocks = stockRepository.getAllStocksForTable();
+		LOGGER.log(Level.INFO, "Retrieved {0} stocks sucessfully", savedStocks.size());
+		return savedStocks;
 	}
 
 }
