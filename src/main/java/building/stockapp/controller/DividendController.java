@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import building.stockapp.dto.DividendTableRowDto;
 import building.stockapp.model.Dividend;
 import building.stockapp.service.DividendService;
 
@@ -35,9 +36,9 @@ public class DividendController {
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<Dividend>> getDividends() {
+	public ResponseEntity<List<DividendTableRowDto>> getDividends() {
 		LOGGER.log(Level.INFO, "Request received to get all added dividends");
-		return new ResponseEntity<>(dividendService.getDividends(), HttpStatus.OK);
+		return new ResponseEntity<>(dividendService.getDividendsForTable(), HttpStatus.OK);
 	}
 
 }

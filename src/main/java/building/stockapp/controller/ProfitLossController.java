@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import building.stockapp.dto.ProfitLossTableRowDto;
 import building.stockapp.model.ProfitLoss;
 import building.stockapp.service.ProfitLossService;
 
@@ -35,9 +36,9 @@ public class ProfitLossController {
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<ProfitLoss>> getProfitLoss() {
+	public ResponseEntity<List<ProfitLossTableRowDto>> getProfitLoss() {
 		LOGGER.log(Level.INFO, "Request received to get all added Profit/Loss entries");
-		return new ResponseEntity<>(profitLossService.getProfitLoss(), HttpStatus.OK);
+		return new ResponseEntity<>(profitLossService.getProfitLossForTable(), HttpStatus.OK);
 	}
 
 }

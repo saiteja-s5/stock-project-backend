@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
+import building.stockapp.dto.ProfitLossTableRowDto;
 import building.stockapp.model.ProfitLoss;
 import building.stockapp.repository.ProfitLossRepository;
 import building.stockapp.service.ProfitLossService;
@@ -29,9 +30,9 @@ public class ProfitLossServiceImpl implements ProfitLossService {
 	}
 
 	@Override
-	public List<ProfitLoss> getProfitLoss() {
+	public List<ProfitLossTableRowDto> getProfitLossForTable() {
 		LOGGER.log(Level.INFO, "Getting all added Profit/Loss entries");
-		List<ProfitLoss> savedProfitLoss = profitLossRepository.findAll();
+		List<ProfitLossTableRowDto> savedProfitLoss = profitLossRepository.getAllProfitLossesForTable();
 		LOGGER.log(Level.INFO, "Retrieved {0} Profit/Loss entries sucessfully", savedProfitLoss.size());
 		return savedProfitLoss;
 	}

@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
+import building.stockapp.dto.DividendTableRowDto;
 import building.stockapp.model.Dividend;
 import building.stockapp.repository.DividendRepository;
 import building.stockapp.service.DividendService;
@@ -29,9 +30,9 @@ public class DividendServiceImpl implements DividendService {
 	}
 
 	@Override
-	public List<Dividend> getDividends() {
+	public List<DividendTableRowDto> getDividendsForTable() {
 		LOGGER.log(Level.INFO, "Getting all added dividends");
-		List<Dividend> savedDividends = dividendRepository.findAll();
+		List<DividendTableRowDto> savedDividends = dividendRepository.getAllDividendsForTable();
 		LOGGER.log(Level.INFO, "Retrieved {0} dividends sucessfully", savedDividends.size());
 		return savedDividends;
 	}

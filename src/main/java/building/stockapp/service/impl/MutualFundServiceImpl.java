@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
+import building.stockapp.dto.MutualFundTableRowDto;
 import building.stockapp.model.MutualFund;
 import building.stockapp.repository.MutualFundRepository;
 import building.stockapp.service.MutualFundService;
@@ -29,9 +30,9 @@ public class MutualFundServiceImpl implements MutualFundService {
 	}
 
 	@Override
-	public List<MutualFund> getMutualFunds() {
+	public List<MutualFundTableRowDto> getMutualFundsForTable() {
 		LOGGER.log(Level.INFO, "Getting all added mutual funds");
-		List<MutualFund> savedMutualFunds = mutualFundRepository.findAll();
+		List<MutualFundTableRowDto> savedMutualFunds = mutualFundRepository.getAllMutualFundsForTable();
 		LOGGER.log(Level.INFO, "Retrieved {0} mutual funds sucessfully", savedMutualFunds.size());
 		return savedMutualFunds;
 	}

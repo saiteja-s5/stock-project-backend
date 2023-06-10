@@ -26,6 +26,9 @@ public class ProfitLoss {
 	@Column(name = "stock_name", length = 20, nullable = false)
 	private String stockName;
 
+	@Column(name = "quantity", nullable = false)
+	private Integer quantity;
+
 	@Embedded
 	private Bought bought;
 

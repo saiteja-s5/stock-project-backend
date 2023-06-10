@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import building.stockapp.dto.MutualFundTableRowDto;
 import building.stockapp.model.MutualFund;
 import building.stockapp.service.MutualFundService;
 
@@ -35,9 +36,9 @@ public class MutualFundController {
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<MutualFund>> getMutualFunds() {
+	public ResponseEntity<List<MutualFundTableRowDto>> getMutualFunds() {
 		LOGGER.log(Level.INFO, "Request received to get all added mutual funds");
-		return new ResponseEntity<>(mutualFundService.getMutualFunds(), HttpStatus.OK);
+		return new ResponseEntity<>(mutualFundService.getMutualFundsForTable(), HttpStatus.OK);
 	}
 
 }

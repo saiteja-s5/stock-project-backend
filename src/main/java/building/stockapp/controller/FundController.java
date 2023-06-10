@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import building.stockapp.dto.FundTableRowDto;
 import building.stockapp.model.Fund;
 import building.stockapp.service.FundService;
 
@@ -35,9 +36,9 @@ public class FundController {
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<Fund>> getFunds() {
+	public ResponseEntity<List<FundTableRowDto>> getFunds() {
 		LOGGER.log(Level.INFO, "Request received to get all added funds");
-		return new ResponseEntity<>(fundService.getFunds(), HttpStatus.OK);
+		return new ResponseEntity<>(fundService.getFundsForTable(), HttpStatus.OK);
 	}
 
 }
