@@ -28,13 +28,13 @@ public class MutualFundController {
 		this.mutualFundService = mutualFundService;
 	}
 
-	@PostMapping("/")
+	@PostMapping()
 	public ResponseEntity<MutualFund> addMutualFund(@RequestBody MutualFund mutualFund) {
 		LOGGER.log(Level.INFO, "Request received to add mutual fund {0}", mutualFund);
 		return new ResponseEntity<>(mutualFundService.addMutualFund(mutualFund), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/")
+	@GetMapping()
 	public ResponseEntity<List<MutualFund>> getMutualFunds() {
 		LOGGER.log(Level.INFO, "Request received to get all added mutual funds");
 		return new ResponseEntity<>(mutualFundService.getMutualFunds(), HttpStatus.OK);

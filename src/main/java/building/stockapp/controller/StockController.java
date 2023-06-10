@@ -7,7 +7,9 @@ import java.util.logging.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,16 +30,33 @@ public class StockController {
 		this.stockService = stockService;
 	}
 
-	@PostMapping("/")
+	@PostMapping()
 	public ResponseEntity<Stock> addStock(@RequestBody Stock stock) {
 		LOGGER.log(Level.INFO, "Request received to add stock {0}", stock.getStockName());
 		return new ResponseEntity<>(stockService.addStock(stock), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/")
+	@GetMapping()
 	public ResponseEntity<List<Stock>> getStocks() {
 		LOGGER.log(Level.INFO, "Request received to get all added stocks");
 		return new ResponseEntity<>(stockService.getStocks(), HttpStatus.OK);
+	}
+
+	@GetMapping("/{stockId}")
+	public ResponseEntity<Stock> getStockById(@PathVariable Long stockId) {
+		LOGGER.log(Level.INFO, "Request received to get stock with Stock ID {0}", stockId);
+		return new ResponseEntity<>(stockService.getStockById(stockId), HttpStatus.OK);
+	}
+
+//	public ResponseEntity<Stock> updateStock(@RequestBody Stock stock, @PathVariable Long stockId) {
+//		LOGGER.log(Level.INFO, "Request received to get stock with Stock ID {0}", stockId);
+//	}
+
+	@DeleteMapping("/{stockId}")
+	public ResponseEntity<Void> deleteStock(@PathVariable Long stockId) {
+		LOGGER.log(Level.INFO, "Request received to delete stock with Stock ID {0}", stockId);
+		stockService.deleteStock(stockId);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

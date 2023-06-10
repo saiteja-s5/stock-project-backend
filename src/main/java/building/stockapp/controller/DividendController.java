@@ -28,13 +28,13 @@ public class DividendController {
 		this.dividendService = dividendService;
 	}
 
-	@PostMapping("/")
+	@PostMapping()
 	public ResponseEntity<Dividend> addDividend(@RequestBody Dividend dividend) {
 		LOGGER.log(Level.INFO, "Request received to add dividend");
 		return new ResponseEntity<>(dividendService.addDividend(dividend), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/")
+	@GetMapping()
 	public ResponseEntity<List<Dividend>> getDividends() {
 		LOGGER.log(Level.INFO, "Request received to get all added dividends");
 		return new ResponseEntity<>(dividendService.getDividends(), HttpStatus.OK);

@@ -28,13 +28,13 @@ public class ProfitLossController {
 		this.profitLossService = profitLossService;
 	}
 
-	@PostMapping("/")
+	@PostMapping()
 	public ResponseEntity<ProfitLoss> addProfitLoss(@RequestBody ProfitLoss profitLoss) {
 		LOGGER.log(Level.INFO, "Request received to add Profit/Loss {0}", profitLoss);
 		return new ResponseEntity<>(profitLossService.addProfitLoss(profitLoss), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/")
+	@GetMapping()
 	public ResponseEntity<List<ProfitLoss>> getProfitLoss() {
 		LOGGER.log(Level.INFO, "Request received to get all added Profit/Loss entries");
 		return new ResponseEntity<>(profitLossService.getProfitLoss(), HttpStatus.OK);

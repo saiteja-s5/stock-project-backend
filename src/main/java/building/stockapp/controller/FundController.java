@@ -28,13 +28,13 @@ public class FundController {
 		this.fundService = fundService;
 	}
 
-	@PostMapping("/")
+	@PostMapping()
 	public ResponseEntity<Fund> addFund(@RequestBody Fund fund) {
 		LOGGER.log(Level.INFO, "Request received to add fund");
 		return new ResponseEntity<>(fundService.addFund(fund), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/")
+	@GetMapping()
 	public ResponseEntity<List<Fund>> getFunds() {
 		LOGGER.log(Level.INFO, "Request received to get all added funds");
 		return new ResponseEntity<>(fundService.getFunds(), HttpStatus.OK);

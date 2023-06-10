@@ -30,14 +30,14 @@ public class CompanyNameDropdownController {
 		this.companyNameDropdownService = companyNameDropdownService;
 	}
 
-	@PostMapping("/")
+	@PostMapping()
 	public ResponseEntity<CompanyNameDropdown> addCompanyNameDropdown(
 			@RequestBody CompanyNameDropdown companyNameDropdown) {
 		LOGGER.log(Level.INFO, "Request received to add company");
 		return new ResponseEntity<>(companyNameDropdownService.addToDatabase(companyNameDropdown), HttpStatus.CREATED);
 	}
 
-	@PostMapping("/excel")
+	@PostMapping("/with-excel")
 	public ResponseEntity<List<CompanyNameDropdown>> addCompanyNameDropdown(@RequestBody Excel excel) {
 		LOGGER.log(Level.INFO, "Request received to add companies with excel at path {0}", excel.getExcelPath());
 		ExcelToDatabase ex2db = new ExcelToDatabase(excel);
@@ -45,7 +45,7 @@ public class CompanyNameDropdownController {
 		return new ResponseEntity<>(companyNameDropdownService.addToDatabase(companies), HttpStatus.CREATED);
 	}
 
-	@GetMapping("/")
+	@GetMapping()
 	public ResponseEntity<List<CompanyNameDropdown>> getCompanyNameDropdowns() {
 		LOGGER.log(Level.INFO, "Request received to get all added company dropdowns");
 		return new ResponseEntity<>(companyNameDropdownService.getCompanyNameDropdowns(), HttpStatus.OK);
