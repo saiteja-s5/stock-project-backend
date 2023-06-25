@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import building.stockapp.dto.DividendDashboardDto;
+import building.stockapp.dto.FundDashboardDto;
+import building.stockapp.dto.ProfitLossDashboardDto;
 import building.stockapp.dto.StockDashboardDto;
 import building.stockapp.dto.YahooStockQuoteDto;
 import building.stockapp.service.CompanyNameDropdownService;
@@ -69,7 +72,7 @@ public class MarketController {
 		return new ResponseEntity<>(marketService.getStocksQuote("nse", currentHoldingStockSymbols), HttpStatus.OK);
 	}
 
-	// Current Holding Dashboard
+	// Current Stock Holding Dashboard
 	@GetMapping("/stock-dashboard")
 	public ResponseEntity<StockDashboardDto> getCurrentHoldingStockDashboard() {
 		LOGGER.log(Level.INFO, "Request received to fetch current stock holding dashboard");
@@ -77,6 +80,27 @@ public class MarketController {
 		stockService.getStocks().forEach(stock -> currentHoldingStockSymbols.add(stock.getStockName()));
 		return new ResponseEntity<>(marketService.getCurrentHoldingStockDashboard(currentHoldingStockSymbols),
 				HttpStatus.OK);
+	}
+
+	// Current Fund Holding Dashboard
+	@GetMapping("/fund-dashboard")
+	public ResponseEntity<FundDashboardDto> getCurrentHoldingFundDashboard() {
+		LOGGER.log(Level.INFO, "Request received to fetch current fund holding dashboard");
+		return new ResponseEntity<>(marketService.getCurrentHoldingFundDashboard(), HttpStatus.OK);
+	}
+
+	// Current Dividend Holding Dashboard
+	@GetMapping("/dividend-dashboard")
+	public ResponseEntity<DividendDashboardDto> getCurrentHoldingDividendDashboard() {
+		LOGGER.log(Level.INFO, "Request received to fetch current dividend holding dashboard");
+		return new ResponseEntity<>(marketService.getCurrentHoldingDividendDashboard(), HttpStatus.OK);
+	}
+
+	// Current Profit Loss Holding Dashboard
+	@GetMapping("/profit-loss-dashboard")
+	public ResponseEntity<ProfitLossDashboardDto> getCurrentHoldingProfitLossDashboard() {
+		LOGGER.log(Level.INFO, "Request received to fetch current profit and loss holding dashboard");
+		return new ResponseEntity<>(marketService.getCurrentHoldingProfitLossDashboard(), HttpStatus.OK);
 	}
 
 }

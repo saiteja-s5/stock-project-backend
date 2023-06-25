@@ -6,13 +6,15 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MathUtility {
+public class Utility {
 
 	public static final int MONTHS_IN_YEAR = 12;
 
 	public static final Double BROKER_MISC_CHARGES = 10.0;
 
-	private MathUtility() {
+	public static final String MISC_TABLE_PRIMARY_KEY = "MASTER-KEY";
+
+	private Utility() {
 	}
 
 	public static Double getPercentTarget(double percent, Period holdDuration, int quantity, double buyPrice) {

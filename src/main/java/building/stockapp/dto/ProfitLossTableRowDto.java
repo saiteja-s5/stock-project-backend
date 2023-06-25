@@ -3,7 +3,7 @@ package building.stockapp.dto;
 import java.time.LocalDate;
 import java.time.Period;
 
-import building.stockapp.utility.MathUtility;
+import building.stockapp.utility.Utility;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,11 +42,11 @@ public class ProfitLossTableRowDto {
 	}
 
 	private Double buyValue() {
-		return MathUtility.roundTo(buyPrice * quantity, 2);
+		return Utility.roundTo(buyPrice * quantity, 2);
 	}
 
 	private Double sellValue() {
-		return MathUtility.roundTo(sellPrice * quantity, 2);
+		return Utility.roundTo(sellPrice * quantity, 2);
 	}
 
 	private Period holdDuration() {
@@ -54,17 +54,17 @@ public class ProfitLossTableRowDto {
 	}
 
 	private Double profitOrLoss() {
-		return MathUtility.roundTo((sellPrice - buyPrice) * quantity, 2);
+		return Utility.roundTo((sellPrice - buyPrice) * quantity, 2);
 	}
 
 	private Double percentReturn() {
-		return MathUtility.percentageReturn(getBuyValue(), getSellValue());
+		return Utility.percentageReturn(getBuyValue(), getSellValue());
 	}
 
 	private Double percentReturnPerMonth() {
-		int months = getHoldDuration().getYears() * MathUtility.MONTHS_IN_YEAR + getHoldDuration().getMonths()
+		int months = getHoldDuration().getYears() * Utility.MONTHS_IN_YEAR + getHoldDuration().getMonths()
 				+ (getHoldDuration().getDays() >= 0 ? 1 : 0);
-		return MathUtility.roundTo((((sellPrice - buyPrice) / buyPrice) * 100) / months, 2);
+		return Utility.roundTo((((sellPrice - buyPrice) / buyPrice) * 100) / months, 2);
 	}
 
 }

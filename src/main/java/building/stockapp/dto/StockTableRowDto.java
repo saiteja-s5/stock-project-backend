@@ -3,7 +3,7 @@ package building.stockapp.dto;
 import java.time.LocalDate;
 import java.time.Period;
 
-import building.stockapp.utility.MathUtility;
+import building.stockapp.utility.Utility;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,11 +41,11 @@ public class StockTableRowDto {
 	}
 
 	private Double onePerTarget() {
-		return MathUtility.roundTo(MathUtility.getPercentTarget(1, holdDuration(), quantity, buyPrice), 2);
+		return Utility.roundTo(Utility.getPercentTarget(1, holdDuration(), quantity, buyPrice), 2);
 	}
 
 	private Double twoPerTarget() {
-		return MathUtility.roundTo(MathUtility.getPercentTarget(2, holdDuration(), quantity, buyPrice), 2);
+		return Utility.roundTo(Utility.getPercentTarget(2, holdDuration(), quantity, buyPrice), 2);
 	}
 
 }

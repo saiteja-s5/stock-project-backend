@@ -3,7 +3,7 @@ package building.stockapp.dto;
 import java.time.LocalDate;
 import java.time.Period;
 
-import building.stockapp.utility.MathUtility;
+import building.stockapp.utility.Utility;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +36,7 @@ public class MutualFundTableRowDto {
 	}
 
 	private Double overallReturnPer() {
-		return MathUtility.roundTo(((0 - nav) / nav) * 100, 2);
+		return Utility.roundTo(((0 - nav) / nav) * 100, 2);
 	}
 
 }
