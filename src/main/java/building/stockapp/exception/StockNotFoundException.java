@@ -6,7 +6,6 @@ public class StockNotFoundException extends RuntimeException {
 
 	public StockNotFoundException(Long stockId) {
 		super("Could not find Stock with Id " + stockId);
-
 	}
 
 }

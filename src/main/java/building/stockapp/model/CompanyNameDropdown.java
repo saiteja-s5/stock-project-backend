@@ -22,4 +22,9 @@ public class CompanyNameDropdown {
 	@Column(name = "company_name", length = 100, nullable = false)
 	private String companyName;
 
+	@Override
+	public String toString() {
+		return companySymbol + "," + companyName;
+	}
+
 }

@@ -1,6 +1,10 @@
 package building.stockapp.utility;
 
+import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MathUtility {
 
@@ -23,6 +27,14 @@ public class MathUtility {
 
 	public static Double roundTo(double number, int places) {
 		return Math.round(number * Math.pow(10, places)) / Math.pow(10, places);
+	}
+
+	public static Calendar localDateToCalender(LocalDate localDate) {
+		ZoneId zoneId = ZoneId.systemDefault();
+		Date date = Date.from(localDate.atStartOfDay(zoneId).toInstant());
+		Calendar from = Calendar.getInstance();
+		from.setTime(date);
+		return from;
 	}
 
 }

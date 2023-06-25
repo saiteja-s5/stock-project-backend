@@ -37,9 +37,9 @@ public class StockController {
 		return new ResponseEntity<>(stockService.addStock(stock), HttpStatus.CREATED);
 	}
 
-	@GetMapping()
+	@GetMapping("/table")
 	public ResponseEntity<List<StockTableRowDto>> getStocksForTable() {
-		LOGGER.log(Level.INFO, "Request received to get all added stocks");
+		LOGGER.log(Level.INFO, "Request received to get all added stocks for populating in table");
 		return new ResponseEntity<>(stockService.getStocksForTable(), HttpStatus.OK);
 	}
 
@@ -48,10 +48,6 @@ public class StockController {
 		LOGGER.log(Level.INFO, "Request received to get stock with Stock ID {0}", stockId);
 		return new ResponseEntity<>(stockService.getStockById(stockId), HttpStatus.OK);
 	}
-
-//	public ResponseEntity<Stock> updateStock(@RequestBody Stock stock, @PathVariable Long stockId) {
-//		LOGGER.log(Level.INFO, "Request received to get stock with Stock ID {0}", stockId);
-//	}
 
 	@DeleteMapping("/{stockId}")
 	public ResponseEntity<Void> deleteStock(@PathVariable Long stockId) {
