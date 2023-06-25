@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import building.stockapp.dto.StockDashboardDto;
 import building.stockapp.dto.YahooStockQuoteDto;
 import building.stockapp.service.CompanyNameDropdownService;
 import building.stockapp.service.MarketService;
@@ -66,6 +67,16 @@ public class MarketController {
 		List<String> currentHoldingStockSymbols = new ArrayList<>();
 		stockService.getStocks().forEach(stock -> currentHoldingStockSymbols.add(stock.getStockName()));
 		return new ResponseEntity<>(marketService.getStocksQuote("nse", currentHoldingStockSymbols), HttpStatus.OK);
+	}
+
+	// Current Holding Dashboard
+	@GetMapping("/stock-dashboard")
+	public ResponseEntity<StockDashboardDto> getCurrentHoldingStockDashboard() {
+		LOGGER.log(Level.INFO, "Request received to fetch current stock holding dashboard");
+		List<String> currentHoldingStockSymbols = new ArrayList<>();
+		stockService.getStocks().forEach(stock -> currentHoldingStockSymbols.add(stock.getStockName()));
+		return new ResponseEntity<>(marketService.getCurrentHoldingStockDashboard(currentHoldingStockSymbols),
+				HttpStatus.OK);
 	}
 
 }

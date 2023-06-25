@@ -6,24 +6,32 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import building.stockapp.dto.StockDashboardDto;
 import building.stockapp.dto.YahooStockQuoteDto;
+import building.stockapp.model.Stock;
+import building.stockapp.repository.StockRepository;
 import building.stockapp.service.MarketService;
 
 @Service
 public class MarketServiceImpl implements MarketService {
 
+	private StockRepository stockRepository;
 	private static final Logger LOGGER = Logger.getLogger(MarketServiceImpl.class.getName());
 
 	public YahooStockQuoteDto getStockQuote(String market, String stockSymbol) {
@@ -65,11 +73,41 @@ public class MarketServiceImpl implements MarketService {
 		return stocks;
 	}
 
+	@Override
+	public StockDashboardDto getCurrentHoldingStockDashboard(List<String> stockSymbols) {
+		LOGGER.log(Level.INFO, "Getting current stock holding dashboard");
+		List<Stock> boughtStocks = stockRepository.findAll();
+		Double stockOverallInvestmentValue = boughtStocks.stream()
+				.mapToDouble(stock -> stock.getBuyPrice() * stock.getQuantity()).sum();
+		Double stockCurrentValue = boughtStocks.stream().mapToDouble(
+				stock -> getStockQuote("NSE", stock.getStockName()).getRegularMarketPrice() * stock.getQuantity())
+				.sum();
+		Double stockCurrentReturn = stockCurrentValue - stockOverallInvestmentValue;
+		Double stockCurrentReturnPercent = (stockCurrentReturn * 100) / stockCurrentValue;
+		Optional<Stock> stock = boughtStocks.stream().max(Comparator.comparing(Stock::getInvestmentDate));
+		LocalDate stockLastTransactionOn = stock.isPresent() ? stock.get().getInvestmentDate() : null;
+		StockDashboardDto fetchedDto = StockDashboardDto.builder()
+				.stockOverallInvestmentValue(stockOverallInvestmentValue).stockCurrentValue(stockCurrentValue)
+				.stockCurrentReturn(stockCurrentReturn).stockCurrentReturnPercent(stockCurrentReturnPercent)
+				.stockLastTransactionOn(stockLastTransactionOn).build();
+		LOGGER.log(Level.INFO, "Current stock holding dashboard fetched sucessfully");
+		return fetchedDto;
+	}
+
 	private String getMarketExtension(String market) {
 		if (market.equalsIgnoreCase("nse")) {
 			return ".NS";
 		}
 		return market.equalsIgnoreCase("bse") ? ".BO" : "";
+	}
+
+	public StockRepository getStockRepository() {
+		return stockRepository;
+	}
+
+	@Autowired
+	public void setStockRepository(StockRepository stockRepository) {
+		this.stockRepository = stockRepository;
 	}
 
 }

@@ -82,6 +82,8 @@ public class YahooStockQuoteDto {
 	private Double priceToBook;
 	private Double sourceInterval;
 	private Double exchangeDataDelayedBy;
+	private Double ytdReturn;
+	private Double trailingThreeMonthReturns;
 	private String averageAnalystRating;
 	private String symbol;
 
