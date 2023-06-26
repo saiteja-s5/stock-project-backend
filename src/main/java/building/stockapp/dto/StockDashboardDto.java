@@ -11,11 +11,11 @@ import lombok.Setter;
 @Builder
 public class StockDashboardDto {
 
-	private Double stockOverallInvestmentValue;
+	private Double stockInvestmentValue;
 	private Double stockCurrentValue;
 	private Double stockCurrentReturn;
 	private Double stockCurrentReturnPercent;
 	private LocalDate stockLastTransactionOn;
-	private LocalDate stockTableLastUpdatedOn;
+	private LocalDate stockTableUpdatedOn;
 
 }

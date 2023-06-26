@@ -11,12 +11,12 @@ import lombok.Setter;
 @Builder
 public class ProfitLossDashboardDto {
 
-	private Double plOverallAmount;
-	private Double plOverallBoughtAmount;
-	private Double plOverallSoldAmount;
-	private Double plAverageReturnPerTransaction;
-	private Double plAverageReturnPerTransactionPercent;
-	private LocalDate plLastTransactionOn;
-	private LocalDate plTableLastUpdatedOn;
+	private Double profitLossEarnedOverall;
+	private Double overallBoughtAmount;
+	private Double overallSoldAmount;
+	private Double averageReturnPerTransaction;
+	private Double averageReturnPerTransactionPercent;
+	private LocalDate profitLossLastTransactionOn;
+	private LocalDate profitLossTableUpdatedOn;
 
 }

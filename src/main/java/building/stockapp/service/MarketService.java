@@ -6,13 +6,13 @@ import building.stockapp.dto.DividendDashboardDto;
 import building.stockapp.dto.FundDashboardDto;
 import building.stockapp.dto.ProfitLossDashboardDto;
 import building.stockapp.dto.StockDashboardDto;
-import building.stockapp.dto.YahooStockQuoteDto;
+import building.stockapp.dto.YahooQuoteDto;
 
 public interface MarketService {
 
-	YahooStockQuoteDto getStockQuote(String market, String stockSymbol);
+	YahooQuoteDto getQuote(String market, String symbol);
 
-	List<YahooStockQuoteDto> getStocksQuote(String market, List<String> stockSymbols);
+	List<YahooQuoteDto> getQuotes(String market, List<String> symbols);
 
 	StockDashboardDto getCurrentHoldingStockDashboard(List<String> stockSymbols);
 

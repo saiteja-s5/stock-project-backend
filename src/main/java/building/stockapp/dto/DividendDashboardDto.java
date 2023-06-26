@@ -11,8 +11,8 @@ import lombok.Setter;
 @Builder
 public class DividendDashboardDto {
 
-	private Double dividendOverallEarned;
+	private Double dividendEarnedOverall;
 	private LocalDate dividendLastTransactionOn;
-	private LocalDate dividendTableLastUpdatedOn;
+	private LocalDate dividendTableUpdatedOn;
 
 }

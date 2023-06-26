@@ -17,8 +17,8 @@ public class StockTableRowDto {
 	private Double buyPrice;
 	private Double buyValue;
 	private Period holdDuration;
-	private Double onePerTarget;
-	private Double twoPerTarget;
+	private Double onePercentTarget;
+	private Double twoPercentTarget;
 
 	public StockTableRowDto(String stockName, Integer quantity, LocalDate buyDate, Double buyPrice) {
 		super();
@@ -28,8 +28,8 @@ public class StockTableRowDto {
 		this.buyPrice = buyPrice;
 		this.buyValue = buyValue();
 		this.holdDuration = holdDuration();
-		this.onePerTarget = onePerTarget();
-		this.twoPerTarget = twoPerTarget();
+		this.onePercentTarget = onePercentTarget();
+		this.twoPercentTarget = twoPercentTarget();
 	}
 
 	private Double buyValue() {
@@ -40,11 +40,11 @@ public class StockTableRowDto {
 		return Period.between(buyDate, LocalDate.now());
 	}
 
-	private Double onePerTarget() {
+	private Double onePercentTarget() {
 		return Utility.roundTo(Utility.getPercentTarget(1, holdDuration(), quantity, buyPrice), 2);
 	}
 
-	private Double twoPerTarget() {
+	private Double twoPercentTarget() {
 		return Utility.roundTo(Utility.getPercentTarget(2, holdDuration(), quantity, buyPrice), 2);
 	}
 

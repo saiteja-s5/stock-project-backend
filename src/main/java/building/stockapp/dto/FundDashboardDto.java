@@ -11,10 +11,10 @@ import lombok.Setter;
 @Builder
 public class FundDashboardDto {
 
-	private Double fundOverallCashIn;
-	private Double fundOverallCreditedAmount;
-	private Double fundOverallDebitedAmount;
+	private Double overallCashIn;
+	private Double overallCreditedAmount;
+	private Double overallDebitedAmount;
 	private LocalDate fundLastTransactionOn;
-	private LocalDate fundTableLastUpdatedOn;
+	private LocalDate fundTableUpdatedOn;
 
 }

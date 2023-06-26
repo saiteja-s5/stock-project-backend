@@ -18,7 +18,7 @@ import building.stockapp.dto.DividendDashboardDto;
 import building.stockapp.dto.FundDashboardDto;
 import building.stockapp.dto.ProfitLossDashboardDto;
 import building.stockapp.dto.StockDashboardDto;
-import building.stockapp.dto.YahooStockQuoteDto;
+import building.stockapp.dto.YahooQuoteDto;
 import building.stockapp.service.CompanyNameDropdownService;
 import building.stockapp.service.MarketService;
 import building.stockapp.service.StockService;
@@ -43,33 +43,32 @@ public class MarketController {
 
 	// Single Stock with symbol + market
 	@GetMapping("/{market}/{stockSymbol}")
-	public ResponseEntity<YahooStockQuoteDto> getStockQuote(@PathVariable String market,
-			@PathVariable String stockSymbol) {
+	public ResponseEntity<YahooQuoteDto> getStockQuote(@PathVariable String market, @PathVariable String stockSymbol) {
 		if (market.equalsIgnoreCase("nse")) {
 			LOGGER.log(Level.INFO, "Request received to fetch {0} data from NSE", stockSymbol);
 		} else if (market.equalsIgnoreCase("bse")) {
 			LOGGER.log(Level.INFO, "Request received to fetch {0} data from BSE", stockSymbol);
 		}
-		return new ResponseEntity<>(marketService.getStockQuote(market, stockSymbol), HttpStatus.OK);
+		return new ResponseEntity<>(marketService.getQuote(market, stockSymbol), HttpStatus.OK);
 	}
 
 	// Multiple (All) Stocks from market
 	@GetMapping("/{market}")
-	public ResponseEntity<List<YahooStockQuoteDto>> getAllStocksQuote(@PathVariable String market) {
+	public ResponseEntity<List<YahooQuoteDto>> getAllStocksQuote(@PathVariable String market) {
 		LOGGER.log(Level.INFO, "Request received to fetch all stock quotes from {0}", market);
 		List<String> allStockSymbols = new ArrayList<>();
 		companyNameDropdownService.getCompanyNameDropdowns()
 				.forEach(dropdown -> allStockSymbols.add(dropdown.getCompanySymbol()));
-		return new ResponseEntity<>(marketService.getStocksQuote(market, allStockSymbols), HttpStatus.OK);
+		return new ResponseEntity<>(marketService.getQuotes(market, allStockSymbols), HttpStatus.OK);
 	}
 
 	// Multiple (Current Holdings) Stocks
-	@GetMapping("/current-stock-holding-quote")
-	public ResponseEntity<List<YahooStockQuoteDto>> getCurrentStockHoldingsQuote() {
+	@GetMapping("/current-stock-holdings")
+	public ResponseEntity<List<YahooQuoteDto>> getCurrentStockHoldingsQuote() {
 		LOGGER.log(Level.INFO, "Request received to fetch all current stock holding quotes");
 		List<String> currentHoldingStockSymbols = new ArrayList<>();
 		stockService.getStocks().forEach(stock -> currentHoldingStockSymbols.add(stock.getStockName()));
-		return new ResponseEntity<>(marketService.getStocksQuote("nse", currentHoldingStockSymbols), HttpStatus.OK);
+		return new ResponseEntity<>(marketService.getQuotes("nse", currentHoldingStockSymbols), HttpStatus.OK);
 	}
 
 	// Current Stock Holding Dashboard

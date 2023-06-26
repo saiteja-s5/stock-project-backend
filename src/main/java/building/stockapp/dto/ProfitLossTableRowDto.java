@@ -20,9 +20,9 @@ public class ProfitLossTableRowDto {
 	private Double sellPrice;
 	private Double sellValue;
 	private Period holdDuration;
-	private Double profitOrLoss;
-	private Double perReturn;
-	private Double percentReturnperMonth;
+	private Double profitLoss;
+	private Double percentReturn;
+	private Double percentReturnPerMonth;
 
 	public ProfitLossTableRowDto(String stockName, Integer quantity, LocalDate buyDate, Double buyPrice,
 			LocalDate sellDate, Double sellPrice) {
@@ -36,9 +36,9 @@ public class ProfitLossTableRowDto {
 		this.sellPrice = sellPrice;
 		this.sellValue = sellValue();
 		this.holdDuration = holdDuration();
-		this.profitOrLoss = profitOrLoss();
-		this.perReturn = percentReturn();
-		this.percentReturnperMonth = percentReturnPerMonth();
+		this.profitLoss = profitOrLoss();
+		this.percentReturn = percentReturn();
+		this.percentReturnPerMonth = percentReturnPerMonth();
 	}
 
 	private Double buyValue() {

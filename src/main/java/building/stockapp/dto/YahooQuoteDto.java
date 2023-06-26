@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class YahooStockQuoteDto {
+public class YahooQuoteDto {
 
 	private String language;
 	private String region;

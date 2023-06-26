@@ -17,10 +17,10 @@ public class MutualFundTableRowDto {
 	private Double unitsAlloted;
 	private Double nav;
 	private Period holdDuration;
-	private Double overallReturnPer;
+	private Double overallReturnPercent;
 
-	public MutualFundTableRowDto(LocalDate investmentDate, Double amountAdded, String investmentType, Double unitsAlloted,
-			Double nav) {
+	public MutualFundTableRowDto(LocalDate investmentDate, Double amountAdded, String investmentType,
+			Double unitsAlloted, Double nav) {
 		super();
 		this.investmentDate = investmentDate;
 		this.amountAdded = amountAdded;
@@ -28,14 +28,14 @@ public class MutualFundTableRowDto {
 		this.unitsAlloted = unitsAlloted;
 		this.nav = nav;
 		this.holdDuration = holdDuration();
-		this.overallReturnPer = overallReturnPer();
+		this.overallReturnPercent = overallReturnPercent();
 	}
 
 	private Period holdDuration() {
 		return Period.between(investmentDate, LocalDate.now());
 	}
 
-	private Double overallReturnPer() {
+	private Double overallReturnPercent() {
 		return Utility.roundTo(((0 - nav) / nav) * 100, 2);
 	}
 
