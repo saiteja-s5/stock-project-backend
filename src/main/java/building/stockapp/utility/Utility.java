@@ -1,8 +1,12 @@
 package building.stockapp.utility;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,6 +17,8 @@ public class Utility {
 	public static final Double BROKER_MISC_CHARGES = 10.0;
 
 	public static final String MISC_TABLE_PRIMARY_KEY = "MASTER-KEY";
+
+	public static final LocalDate EPOCH_SECOND_EXCEEDS_INTEGER_ON = LocalDate.of(2038, 01, 19);
 
 	private Utility() {
 	}
@@ -37,6 +43,18 @@ public class Utility {
 		Calendar from = Calendar.getInstance();
 		from.setTime(date);
 		return from;
+	}
+
+	public static long localDateToEpochSecond(LocalDate localDate) {
+		ZoneId zoneId = ZoneId.systemDefault();
+		ZoneOffset zoneOffSet = zoneId.getRules().getOffset(LocalDateTime.now());
+		LocalDate date = localDate;
+		LocalTime time = LocalTime.parse("00:00:00");
+		return date.toEpochSecond(time, zoneOffSet);
+	}
+
+	public static LocalDate epochSecondToLocalDate(int seconds) {
+		return LocalDate.ofInstant(Instant.ofEpochSecond(seconds), ZoneId.systemDefault());
 	}
 
 }

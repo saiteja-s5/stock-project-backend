@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +20,8 @@ import building.stockapp.dto.FundDashboardDto;
 import building.stockapp.dto.ProfitLossDashboardDto;
 import building.stockapp.dto.StockDashboardDto;
 import building.stockapp.dto.YahooQuoteDto;
+import building.stockapp.model.HistoricalQuote;
+import building.stockapp.model.HistoricalQuoteBodyTemplate;
 import building.stockapp.service.CompanyNameDropdownService;
 import building.stockapp.service.MarketService;
 import building.stockapp.service.StockService;
@@ -69,6 +72,15 @@ public class MarketController {
 		List<String> currentHoldingStockSymbols = new ArrayList<>();
 		stockService.getStocks().forEach(stock -> currentHoldingStockSymbols.add(stock.getStockName()));
 		return new ResponseEntity<>(marketService.getQuotes("nse", currentHoldingStockSymbols), HttpStatus.OK);
+	}
+
+	// Historical Quotes with symbol + startDate + endDate + interval
+	@GetMapping("/historical-stock-holdings")
+	public ResponseEntity<List<HistoricalQuote>> getHistoricalStockHoldingsQuote(
+			@RequestBody HistoricalQuoteBodyTemplate template) {
+		LOGGER.log(Level.INFO, "Request received to fetch all historical quotes for stock {0}", template.getSymbol());
+		return new ResponseEntity<>(marketService.getHistory(template.getMarket(), template.getSymbol(),
+				template.getFrom(), template.getTo(), template.getInterval()), HttpStatus.OK);
 	}
 
 	// Current Stock Holding Dashboard

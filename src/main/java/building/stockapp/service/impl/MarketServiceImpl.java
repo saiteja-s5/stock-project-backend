@@ -1,6 +1,7 @@
 package building.stockapp.service.impl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +32,7 @@ import building.stockapp.dto.YahooQuoteDto;
 import building.stockapp.exception.MiscellaneousRecordNotExistException;
 import building.stockapp.model.Dividend;
 import building.stockapp.model.Fund;
+import building.stockapp.model.HistoricalQuote;
 import building.stockapp.model.ProfitLoss;
 import building.stockapp.model.Stock;
 import building.stockapp.repository.DividendRepository;
@@ -38,6 +41,7 @@ import building.stockapp.repository.MiscellaneousRecordRepository;
 import building.stockapp.repository.ProfitLossRepository;
 import building.stockapp.repository.StockRepository;
 import building.stockapp.service.MarketService;
+import building.stockapp.utility.Interval;
 import building.stockapp.utility.Utility;
 import lombok.Getter;
 
@@ -50,17 +54,16 @@ public class MarketServiceImpl implements MarketService {
 	private DividendRepository dividendRepository;
 	private ProfitLossRepository profitLossRepository;
 	private MiscellaneousRecordRepository miscRecordRepository;
+
 	private static final Logger LOGGER = Logger.getLogger(MarketServiceImpl.class.getName());
+	private static String crumb = "dKq4FFFb9Xz";
+	private static String cookie = "A1=d=AQABBAVGnWMCEMQWQR36X4J3ijLpLPruWaYFEgEBCAGuhmS2ZFlQb2UB_eMBAAcIBUadY_ruWaY&S=AQAAAhy9uDwG2WFWWTzYTd-bT6Y; A3=d=AQABBAVGnWMCEMQWQR36X4J3ijLpLPruWaYFEgEBCAGuhmS2ZFlQb2UB_eMBAAcIBUadY_ruWaY&S=AQAAAhy9uDwG2WFWWTzYTd-bT6Y; cmp=t=1686463791&j=0&u=1---; gam_id=y-dgF31zJE2uKlSQ7em1AyJvOfFxbN45Oc~A; B=acmfev9hpqhg5&b=3&s=3p; GUC=AQEBCAFkhq5ktkIjtAT5; PRF=t%3DAPI%26newChartbetateaser%3D0%252C1687673503957; tbla_id=60e25e2e-9d52-41f6-8102-b1f281df14e9-tuctb7eeb33; A1S=d=AQABBAVGnWMCEMQWQR36X4J3ijLpLPruWaYFEgEBCAGuhmS2ZFlQb2UB_eMBAAcIBUadY_ruWaY&S=AQAAAhy9uDwG2WFWWTzYTd-bT6Y&j=WORLD";
 
+	@Override
 	public YahooQuoteDto getQuote(String market, String symbol) {
-
-		String crumb = "dKq4FFFb9Xz";
-		String cookie = "A1=d=AQABBAVGnWMCEMQWQR36X4J3ijLpLPruWaYFEgEBCAGuhmS2ZFlQb2UB_eMBAAcIBUadY_ruWaY&S=AQAAAhy9uDwG2WFWWTzYTd-bT6Y; A3=d=AQABBAVGnWMCEMQWQR36X4J3ijLpLPruWaYFEgEBCAGuhmS2ZFlQb2UB_eMBAAcIBUadY_ruWaY&S=AQAAAhy9uDwG2WFWWTzYTd-bT6Y; cmp=t=1686463791&j=0&u=1---; gam_id=y-dgF31zJE2uKlSQ7em1AyJvOfFxbN45Oc~A; B=acmfev9hpqhg5&b=3&s=3p; GUC=AQEBCAFkhq5ktkIjtAT5; PRF=t%3DAPI%26newChartbetateaser%3D0%252C1687673503957; tbla_id=60e25e2e-9d52-41f6-8102-b1f281df14e9-tuctb7eeb33; A1S=d=AQABBAVGnWMCEMQWQR36X4J3ijLpLPruWaYFEgEBCAGuhmS2ZFlQb2UB_eMBAAcIBUadY_ruWaY&S=AQAAAhy9uDwG2WFWWTzYTd-bT6Y&j=WORLD";
-
 		String marketExtension = getMarketExtension(market);
-
 		URIBuilder builder = new URIBuilder().setScheme("https").setHost("query1.finance.yahoo.com")
-				.setPath("/v7/finance/quote").addParameter("symbols", symbol + marketExtension)
+				.setPath("/v8/finance/quote").addParameter("symbols", symbol + marketExtension)
 				.addParameter("crumb", crumb);
 		try {
 			URI uri = builder.build();
@@ -80,6 +83,55 @@ public class MarketServiceImpl implements MarketService {
 			LOGGER.log(Level.WARNING, "Exception occured {0}", e.getMessage());
 		}
 		return new YahooQuoteDto();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<HistoricalQuote> getHistory(String market, String symbol, LocalDate from, LocalDate to,
+			Interval interval) {
+		List<HistoricalQuote> history = new ArrayList<>();
+		String marketExtension = getMarketExtension(market);
+		URIBuilder builder = new URIBuilder().setScheme("https").setHost("query1.finance.yahoo.com")
+				.setPath("/v8/finance/chart/" + symbol + marketExtension).addParameter("crumb", crumb)
+				.addParameter("includeAdjustedClose", "true").addParameter("interval", interval.getTag())
+				.addParameter("period1", String.valueOf(Utility.localDateToEpochSecond(from)))
+				.addParameter("period2", String.valueOf(Utility.localDateToEpochSecond(to.plusDays(1))));
+		try {
+			URI uri = builder.build();
+			LOGGER.log(Level.INFO, "Dispatching request to {0}", uri);
+			HttpClient client = HttpClient.newHttpClient();
+			HttpRequest request = HttpRequest.newBuilder(uri).GET().header("Cookie", cookie).build();
+			JSONObject response = new JSONObject(client.send(request, HttpResponse.BodyHandlers.ofString()).body());
+			LOGGER.log(Level.INFO, "Response received from {0}", uri);
+			JSONObject intermediateJson = response.getJSONObject("chart").getJSONArray("result").getJSONObject(0);
+			Map<String, List<BigDecimal>> opLoHiClAdjClMap = (Map<String, List<BigDecimal>>) intermediateJson
+					.getJSONObject("indicators").getJSONArray("quote").toList().get(0);
+			Map<String, List<BigDecimal>> adjCloseMap = (Map<String, List<BigDecimal>>) intermediateJson
+					.getJSONObject("indicators").getJSONArray("adjclose").toList().get(0);
+			List<Object> tradedDatesInObject = intermediateJson.getJSONArray("timestamp").toList();
+			List<BigDecimal> opens = opLoHiClAdjClMap.get("open");
+			List<BigDecimal> closes = opLoHiClAdjClMap.get("close");
+			List<BigDecimal> lows = opLoHiClAdjClMap.get("low");
+			List<BigDecimal> highs = opLoHiClAdjClMap.get("high");
+			List<Integer> volumes = ((Map<String, List<Integer>>) (intermediateJson.getJSONObject("indicators")
+					.getJSONArray("quote").toList().get(0))).get("volume");
+			List<BigDecimal> adjCloses = adjCloseMap.get("adjclose");
+			LOGGER.log(Level.INFO, "Response mapped to List");
+			for (int i = 0; i < tradedDatesInObject.size(); i++) {
+				history.add(HistoricalQuote.builder()
+						.tradedDate(Utility.epochSecondToLocalDate((int) tradedDatesInObject.get(i))).open(opens.get(i))
+						.close(closes.get(i)).low(lows.get(i)).high(highs.get(i)).adjustedClose(adjCloses.get(i))
+						.volume((int) volumes.get(i)).build());
+			}
+			LOGGER.log(Level.INFO, "Mapping from List to Dto list completed");
+			return history;
+		} catch (InterruptedException ie) {
+			LOGGER.log(Level.WARNING, "Interrupted Exception occured {0}", ie.getMessage());
+			Thread.currentThread().interrupt();
+		} catch (JSONException | IOException | URISyntaxException e) {
+			LOGGER.log(Level.WARNING, "Exception occured {0}", e.getMessage());
+		}
+		return history;
 	}
 
 	@Override
