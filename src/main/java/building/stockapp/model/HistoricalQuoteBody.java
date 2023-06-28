@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HistoricalQuoteBodyTemplate {
+public class HistoricalQuoteBody {
 
 	String market;
 	String symbol;

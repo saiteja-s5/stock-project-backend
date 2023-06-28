@@ -21,14 +21,14 @@ import building.stockapp.dto.ProfitLossDashboardDto;
 import building.stockapp.dto.StockDashboardDto;
 import building.stockapp.dto.YahooQuoteDto;
 import building.stockapp.model.HistoricalQuote;
-import building.stockapp.model.HistoricalQuoteBodyTemplate;
+import building.stockapp.model.HistoricalQuoteBody;
 import building.stockapp.service.CompanyNameDropdownService;
 import building.stockapp.service.MarketService;
 import building.stockapp.service.StockService;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/market")
+@RequestMapping("/markets")
 public class MarketController {
 
 	private MarketService marketService;
@@ -77,7 +77,7 @@ public class MarketController {
 	// Historical Quotes with symbol + startDate + endDate + interval
 	@GetMapping("/historical-stock-holdings")
 	public ResponseEntity<List<HistoricalQuote>> getHistoricalStockHoldingsQuote(
-			@RequestBody HistoricalQuoteBodyTemplate template) {
+			@RequestBody HistoricalQuoteBody template) {
 		LOGGER.log(Level.INFO, "Request received to fetch all historical quotes for stock {0}", template.getSymbol());
 		return new ResponseEntity<>(marketService.getHistory(template.getMarket(), template.getSymbol(),
 				template.getFrom(), template.getTo(), template.getInterval()), HttpStatus.OK);

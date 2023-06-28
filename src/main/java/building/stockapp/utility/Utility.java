@@ -18,7 +18,17 @@ public class Utility {
 
 	public static final String MISC_TABLE_PRIMARY_KEY = "MASTER-KEY";
 
-	public static final LocalDate EPOCH_SECOND_EXCEEDS_INTEGER_ON = LocalDate.of(2038, 01, 19);
+	public static final LocalDate STOCK_START_DATE = LocalDate.of(2021, 1, 18);
+
+	public static final LocalDate MUTUAL_FUND_START_DATE = LocalDate.of(2021, 8, 14);
+
+	public static final LocalDate FUND_START_DATE = LocalDate.of(2021, 1, 18);
+
+	public static final LocalDate DIVIDEND_START_DATE = LocalDate.of(2021, 1, 18);
+
+	public static final LocalDate SOLD_START_DATE = LocalDate.of(2021, 1, 18);
+
+	public static final LocalDate EPOCH_SECOND_EXCEEDS_INTEGER_ON = LocalDate.of(2038, 1, 19);
 
 	private Utility() {
 	}

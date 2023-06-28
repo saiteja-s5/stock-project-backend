@@ -29,10 +29,10 @@ import building.stockapp.dto.FundDashboardDto;
 import building.stockapp.dto.ProfitLossDashboardDto;
 import building.stockapp.dto.StockDashboardDto;
 import building.stockapp.dto.YahooQuoteDto;
-import building.stockapp.exception.MiscellaneousRecordNotExistException;
 import building.stockapp.model.Dividend;
 import building.stockapp.model.Fund;
 import building.stockapp.model.HistoricalQuote;
+import building.stockapp.model.MiscellaneousRecord;
 import building.stockapp.model.ProfitLoss;
 import building.stockapp.model.Stock;
 import building.stockapp.repository.DividendRepository;
@@ -103,18 +103,19 @@ public class MarketServiceImpl implements MarketService {
 			HttpRequest request = HttpRequest.newBuilder(uri).GET().header("Cookie", cookie).build();
 			JSONObject response = new JSONObject(client.send(request, HttpResponse.BodyHandlers.ofString()).body());
 			LOGGER.log(Level.INFO, "Response received from {0}", uri);
-			JSONObject intermediateJson = response.getJSONObject("chart").getJSONArray("result").getJSONObject(0);
-			Map<String, List<BigDecimal>> opLoHiClAdjClMap = (Map<String, List<BigDecimal>>) intermediateJson
-					.getJSONObject("indicators").getJSONArray("quote").toList().get(0);
-			Map<String, List<BigDecimal>> adjCloseMap = (Map<String, List<BigDecimal>>) intermediateJson
-					.getJSONObject("indicators").getJSONArray("adjclose").toList().get(0);
-			List<Object> tradedDatesInObject = intermediateJson.getJSONArray("timestamp").toList();
+			JSONObject intermediateJsonLevel1 = response.getJSONObject("chart").getJSONArray("result").getJSONObject(0);
+			JSONObject intermediateJsonLevel2 = intermediateJsonLevel1.getJSONObject("indicators");
+			Map<String, List<BigDecimal>> opLoHiClAdjClMap = (Map<String, List<BigDecimal>>) intermediateJsonLevel2
+					.getJSONArray("quote").toList().get(0);
+			Map<String, List<BigDecimal>> adjCloseMap = (Map<String, List<BigDecimal>>) intermediateJsonLevel2
+					.getJSONArray("adjclose").toList().get(0);
+			List<Object> tradedDatesInObject = intermediateJsonLevel1.getJSONArray("timestamp").toList();
 			List<BigDecimal> opens = opLoHiClAdjClMap.get("open");
 			List<BigDecimal> closes = opLoHiClAdjClMap.get("close");
 			List<BigDecimal> lows = opLoHiClAdjClMap.get("low");
 			List<BigDecimal> highs = opLoHiClAdjClMap.get("high");
-			List<Integer> volumes = ((Map<String, List<Integer>>) (intermediateJson.getJSONObject("indicators")
-					.getJSONArray("quote").toList().get(0))).get("volume");
+			List<Integer> volumes = ((Map<String, List<Integer>>) (intermediateJsonLevel2.getJSONArray("quote").toList()
+					.get(0))).get("volume");
 			List<BigDecimal> adjCloses = adjCloseMap.get("adjclose");
 			LOGGER.log(Level.INFO, "Response mapped to List");
 			for (int i = 0; i < tradedDatesInObject.size(); i++) {
@@ -154,11 +155,13 @@ public class MarketServiceImpl implements MarketService {
 						stock -> getQuote("NSE", stock.getStockName()).getRegularMarketPrice() * stock.getQuantity())
 				.sum();
 		Double stockCurrentReturn = stockCurrentValue - stockInvestmentValue;
-		Double stockCurrentReturnPercent = (stockCurrentReturn * 100) / stockCurrentValue;
+		Double stockCurrentReturnPercent = (stockCurrentReturn * 100) / stockInvestmentValue;
 		Optional<Stock> stock = boughtStocks.stream().max(Comparator.comparing(Stock::getInvestmentDate));
-		LocalDate stockLastTransactionOn = stock.isPresent() ? stock.get().getInvestmentDate() : null;
-		LocalDate stockTableUpdatedOn = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY)
-				.orElseThrow(MiscellaneousRecordNotExistException::new).getStockTableUpdatedOn();
+		LocalDate stockLastTransactionOn = stock.isPresent() ? stock.get().getInvestmentDate()
+				: Utility.STOCK_START_DATE;
+		Optional<MiscellaneousRecord> miscRecord = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY);
+		LocalDate stockTableUpdatedOn = miscRecord.isPresent() ? miscRecord.get().getStockTableUpdatedOn()
+				: Utility.STOCK_START_DATE;
 		StockDashboardDto fetchedDto = StockDashboardDto.builder().stockInvestmentValue(stockInvestmentValue)
 				.stockCurrentValue(stockCurrentValue).stockCurrentReturn(stockCurrentReturn)
 				.stockCurrentReturnPercent(stockCurrentReturnPercent).stockLastTransactionOn(stockLastTransactionOn)
@@ -175,9 +178,10 @@ public class MarketServiceImpl implements MarketService {
 		Double overallDebitedAmount = allFunds.stream().mapToDouble(Fund::getDebitedAmount).sum();
 		Double overallCashIn = overallCreditedAmount - overallDebitedAmount;
 		Optional<Fund> fund = allFunds.stream().max(Comparator.comparing(Fund::getTransactionDate));
-		LocalDate fundLastTransactionOn = fund.isPresent() ? fund.get().getTransactionDate() : null;
-		LocalDate fundTableUpdatedOn = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY)
-				.orElseThrow(MiscellaneousRecordNotExistException::new).getFundTableUpdatedOn();
+		LocalDate fundLastTransactionOn = fund.isPresent() ? fund.get().getTransactionDate() : Utility.FUND_START_DATE;
+		Optional<MiscellaneousRecord> miscRecord = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY);
+		LocalDate fundTableUpdatedOn = miscRecord.isPresent() ? miscRecord.get().getFundTableUpdatedOn()
+				: Utility.FUND_START_DATE;
 		FundDashboardDto fetchedDto = FundDashboardDto.builder().overallCashIn(overallCashIn)
 				.overallCreditedAmount(overallCreditedAmount).overallDebitedAmount(overallDebitedAmount)
 				.fundLastTransactionOn(fundLastTransactionOn).fundTableUpdatedOn(fundTableUpdatedOn).build();
@@ -191,9 +195,11 @@ public class MarketServiceImpl implements MarketService {
 		List<Dividend> allDividends = dividendRepository.findAll();
 		Double dividendEarnedOverall = allDividends.stream().mapToDouble(Dividend::getCreditedAmount).sum();
 		Optional<Dividend> dividend = allDividends.stream().max(Comparator.comparing(Dividend::getCreditedDate));
-		LocalDate dividendLastTransactionOn = dividend.isPresent() ? dividend.get().getCreditedDate() : null;
-		LocalDate dividendTableUpdatedOn = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY)
-				.orElseThrow(MiscellaneousRecordNotExistException::new).getDividendTableUpdatedOn();
+		LocalDate dividendLastTransactionOn = dividend.isPresent() ? dividend.get().getCreditedDate()
+				: Utility.DIVIDEND_START_DATE;
+		Optional<MiscellaneousRecord> miscRecord = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY);
+		LocalDate dividendTableUpdatedOn = miscRecord.isPresent() ? miscRecord.get().getDividendTableUpdatedOn()
+				: Utility.DIVIDEND_START_DATE;
 		DividendDashboardDto fetchedDto = DividendDashboardDto.builder().dividendEarnedOverall(dividendEarnedOverall)
 				.dividendLastTransactionOn(dividendLastTransactionOn).dividendTableUpdatedOn(dividendTableUpdatedOn)
 				.build();
@@ -211,13 +217,23 @@ public class MarketServiceImpl implements MarketService {
 		Comparator<ProfitLoss> lastDateComparator = (pl1, pl2) -> pl1.getSold().getSoldDate()
 				.compareTo(pl2.getSold().getSoldDate());
 		Optional<ProfitLoss> pl = allpls.stream().max(lastDateComparator);
-		LocalDate profitLossLastTransactionOn = pl.isPresent() ? pl.get().getSold().getSoldDate() : null;
-		LocalDate plTableUpdatedOn = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY)
-				.orElseThrow(MiscellaneousRecordNotExistException::new).getProfitLossTableUpdatedOn();
+		LocalDate profitLossLastTransactionOn = pl.isPresent() ? pl.get().getSold().getSoldDate()
+				: Utility.SOLD_START_DATE;
+		Optional<MiscellaneousRecord> miscRecord = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY);
+		LocalDate plTableUpdatedOn = miscRecord.isPresent() ? miscRecord.get().getProfitLossTableUpdatedOn()
+				: Utility.SOLD_START_DATE;
+		Double overallProfitLossPercent = (profitLossEarnedOverall * 100) / overallBoughtAmount;
+		Double averageReturnPerTransaction = profitLossEarnedOverall / allpls.size();
+		Double averageReturnPerTransactionPercent = allpls.stream().mapToDouble(profitLoss -> Utility
+				.percentageReturn(profitLoss.getBought().getBoughtPrice(), profitLoss.getSold().getSoldPrice())).sum()
+				/ allpls.size();
 		ProfitLossDashboardDto fetchedDto = ProfitLossDashboardDto.builder()
 				.profitLossEarnedOverall(profitLossEarnedOverall).overallBoughtAmount(overallBoughtAmount)
-				.overallSoldAmount(overallSoldAmount).profitLossLastTransactionOn(profitLossLastTransactionOn)
-				.profitLossTableUpdatedOn(plTableUpdatedOn).build();
+				.overallSoldAmount(overallSoldAmount).overallProfitLossPercent(overallProfitLossPercent)
+				.averageReturnPerTransaction(averageReturnPerTransaction)
+				.averageReturnPerTransactionPercent(averageReturnPerTransactionPercent)
+				.profitLossLastTransactionOn(profitLossLastTransactionOn).profitLossTableUpdatedOn(plTableUpdatedOn)
+				.build();
 		LOGGER.log(Level.INFO, "Current profit and loss holding dashboard fetched sucessfully");
 		return fetchedDto;
 	}

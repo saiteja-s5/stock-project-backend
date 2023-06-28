@@ -14,6 +14,7 @@ public class ProfitLossDashboardDto {
 	private Double profitLossEarnedOverall;
 	private Double overallBoughtAmount;
 	private Double overallSoldAmount;
+	private Double overallProfitLossPercent;
 	private Double averageReturnPerTransaction;
 	private Double averageReturnPerTransactionPercent;
 	private LocalDate profitLossLastTransactionOn;
