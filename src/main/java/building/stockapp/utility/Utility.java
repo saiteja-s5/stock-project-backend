@@ -24,7 +24,7 @@ public class Utility {
 
 	public static final LocalDate FUND_START_DATE = LocalDate.of(2021, 1, 18);
 
-	public static final LocalDate DIVIDEND_START_DATE = LocalDate.of(2021, 1, 18);
+	public static final LocalDate DIVIDEND_START_DATE = LocalDate.of(2021, 3, 10);
 
 	public static final LocalDate SOLD_START_DATE = LocalDate.of(2021, 1, 18);
 

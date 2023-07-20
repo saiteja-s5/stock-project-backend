@@ -86,5 +86,6 @@ public class YahooQuoteDto {
 	private Double trailingThreeMonthReturns;
 	private String averageAnalystRating;
 	private String symbol;
+	private Double fiftyTwoWeekChangePercent;
 
 }

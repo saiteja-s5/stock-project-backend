@@ -63,7 +63,7 @@ public class MarketServiceImpl implements MarketService {
 	public YahooQuoteDto getQuote(String market, String symbol) {
 		String marketExtension = getMarketExtension(market);
 		URIBuilder builder = new URIBuilder().setScheme("https").setHost("query1.finance.yahoo.com")
-				.setPath("/v8/finance/quote").addParameter("symbols", symbol + marketExtension)
+				.setPath("/v7/finance/quote").addParameter("symbols", symbol + marketExtension)
 				.addParameter("crumb", crumb);
 		try {
 			URI uri = builder.build();
@@ -92,7 +92,7 @@ public class MarketServiceImpl implements MarketService {
 		List<HistoricalQuote> history = new ArrayList<>();
 		String marketExtension = getMarketExtension(market);
 		URIBuilder builder = new URIBuilder().setScheme("https").setHost("query1.finance.yahoo.com")
-				.setPath("/v8/finance/chart/" + symbol + marketExtension).addParameter("crumb", crumb)
+				.setPath("/v7/finance/chart/" + symbol + marketExtension).addParameter("crumb", crumb)
 				.addParameter("includeAdjustedClose", "true").addParameter("interval", interval.getTag())
 				.addParameter("period1", String.valueOf(Utility.localDateToEpochSecond(from)))
 				.addParameter("period2", String.valueOf(Utility.localDateToEpochSecond(to.plusDays(1))));
