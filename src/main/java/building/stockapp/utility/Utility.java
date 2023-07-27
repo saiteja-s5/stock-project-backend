@@ -1,5 +1,6 @@
 package building.stockapp.utility;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,23 +29,25 @@ public class Utility {
 
 	public static final LocalDate SOLD_START_DATE = LocalDate.of(2021, 1, 18);
 
+	public static final LocalDate PORTFOLIO_START_DATE = LocalDate.of(2023, 1, 24);
+
 	public static final LocalDate EPOCH_SECOND_EXCEEDS_INTEGER_ON = LocalDate.of(2038, 1, 19);
 
 	private Utility() {
 	}
 
-	public static Double getPercentTarget(double percent, Period holdDuration, int quantity, double buyPrice) {
+	public static BigDecimal getPercentTarget(Double percent, Period holdDuration, int quantity, Double buyPrice) {
 		int months = holdDuration.getYears() * MONTHS_IN_YEAR + holdDuration.getMonths()
 				+ (holdDuration.getDays() > 0 ? 1 : 0);
 		return roundTo((months * percent * buyPrice * 0.01) + buyPrice + (BROKER_MISC_CHARGES / quantity), 2);
 	}
 
-	public static Double percentageReturn(double buyPrice, double sellPrice) {
+	public static BigDecimal percentageReturn(Double buyPrice, Double sellPrice) {
 		return roundTo(((sellPrice - buyPrice) / buyPrice) * 100, 2);
 	}
 
-	public static Double roundTo(double number, int places) {
-		return Math.round(number * Math.pow(10, places)) / Math.pow(10, places);
+	public static BigDecimal roundTo(Double number, int places) {
+		return BigDecimal.valueOf(Math.round(number * Math.pow(10, places)) / Math.pow(10, places));
 	}
 
 	public static Calendar localDateToCalender(LocalDate localDate) {

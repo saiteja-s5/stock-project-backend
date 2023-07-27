@@ -17,6 +17,7 @@ import building.stockapp.model.CompanyNameDropdown;
 import building.stockapp.model.Excel;
 import building.stockapp.service.CompanyNameDropdownService;
 import building.stockapp.utility.ExcelToDatabase;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -32,13 +33,13 @@ public class CompanyNameDropdownController {
 
 	@PostMapping()
 	public ResponseEntity<CompanyNameDropdown> addCompanyNameDropdown(
-			@RequestBody CompanyNameDropdown companyNameDropdown) {
+			@RequestBody @Valid CompanyNameDropdown companyNameDropdown) {
 		LOGGER.log(Level.INFO, "Request received to add company in dropdown");
 		return new ResponseEntity<>(companyNameDropdownService.addToDatabase(companyNameDropdown), HttpStatus.CREATED);
 	}
 
 	@PostMapping("/with-excel")
-	public ResponseEntity<List<CompanyNameDropdown>> addCompanyNameDropdown(@RequestBody Excel excel) {
+	public ResponseEntity<List<CompanyNameDropdown>> addCompanyNameDropdown(@RequestBody @Valid Excel excel) {
 		LOGGER.log(Level.INFO, "Request received to add companies dropdowns with excel at path {0}",
 				excel.getExcelPath());
 		ExcelToDatabase ex2db = new ExcelToDatabase(excel);

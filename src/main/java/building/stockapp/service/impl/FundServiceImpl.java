@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
-import building.stockapp.dto.FundTableRowDto;
+import building.stockapp.dto.FundTableRowDTO;
 import building.stockapp.model.Fund;
 import building.stockapp.repository.FundRepository;
 import building.stockapp.service.FundService;
@@ -30,9 +30,9 @@ public class FundServiceImpl implements FundService {
 	}
 
 	@Override
-	public List<FundTableRowDto> getFundsForTable() {
+	public List<FundTableRowDTO> getFundsForTable() {
 		LOGGER.log(Level.INFO, "Getting all added funds");
-		List<FundTableRowDto> savedFunds = fundRepository.getAllFundsForTable();
+		List<FundTableRowDTO> savedFunds = fundRepository.getAllFundsForTable();
 		LOGGER.log(Level.INFO, "Retrieved {0} funds sucessfully", savedFunds.size());
 		return savedFunds;
 	}

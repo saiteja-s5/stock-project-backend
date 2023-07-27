@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import building.stockapp.dto.StockTableRowDto;
+import building.stockapp.dto.StockTableRowDTO;
 import building.stockapp.model.Stock;
 import building.stockapp.service.StockService;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -32,13 +33,13 @@ public class StockController {
 	}
 
 	@PostMapping()
-	public ResponseEntity<Stock> addStock(@RequestBody Stock stock) {
+	public ResponseEntity<Stock> addStock(@RequestBody @Valid Stock stock) {
 		LOGGER.log(Level.INFO, "Request received to add stock {0}", stock.getStockName());
 		return new ResponseEntity<>(stockService.addStock(stock), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/table")
-	public ResponseEntity<List<StockTableRowDto>> getStocksForTable() {
+	public ResponseEntity<List<StockTableRowDTO>> getStocksForTable() {
 		LOGGER.log(Level.INFO, "Request received to get all added stocks for populating in table");
 		return new ResponseEntity<>(stockService.getStocksForTable(), HttpStatus.OK);
 	}
@@ -53,7 +54,7 @@ public class StockController {
 	public ResponseEntity<Void> deleteStock(@PathVariable Long stockId) {
 		LOGGER.log(Level.INFO, "Request received to delete stock with Stock ID {0}", stockId);
 		stockService.deleteStock(stockId);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }

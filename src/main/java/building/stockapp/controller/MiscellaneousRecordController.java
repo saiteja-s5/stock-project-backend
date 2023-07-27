@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import building.stockapp.model.MiscellaneousRecord;
 import building.stockapp.service.MiscellaneousRecordService;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -35,9 +36,8 @@ public class MiscellaneousRecordController {
 
 	@PutMapping()
 	public ResponseEntity<MiscellaneousRecord> updateMiscellaneousRecord(
-			@RequestBody MiscellaneousRecord miscellaneousRecord) {
+			@RequestBody @Valid MiscellaneousRecord miscellaneousRecord) {
 		LOGGER.log(Level.INFO, "Request received to update table info");
-		return new ResponseEntity<>(miscRecordService.updateMiscellaneousRecord(miscellaneousRecord),
-				HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(miscRecordService.updateMiscellaneousRecord(miscellaneousRecord), HttpStatus.OK);
 	}
 }

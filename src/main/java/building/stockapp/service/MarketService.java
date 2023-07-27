@@ -3,28 +3,28 @@ package building.stockapp.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import building.stockapp.dto.DividendDashboardDto;
-import building.stockapp.dto.FundDashboardDto;
-import building.stockapp.dto.ProfitLossDashboardDto;
-import building.stockapp.dto.StockDashboardDto;
-import building.stockapp.dto.YahooQuoteDto;
+import building.stockapp.dto.DividendDashboardDTO;
+import building.stockapp.dto.FundDashboardDTO;
+import building.stockapp.dto.ProfitLossDashboardDTO;
+import building.stockapp.dto.StockDashboardDTO;
+import building.stockapp.dto.YahooQuoteDTO;
 import building.stockapp.model.HistoricalQuote;
 import building.stockapp.utility.Interval;
 
 public interface MarketService {
 
-	YahooQuoteDto getQuote(String market, String symbol);
+	YahooQuoteDTO getQuote(String market, String symbol);
 
-	List<YahooQuoteDto> getQuotes(String market, List<String> symbols);
+	List<YahooQuoteDTO> getQuotes(String market, List<String> symbols);
 
 	List<HistoricalQuote> getHistory(String market, String symbol, LocalDate from, LocalDate to, Interval interval);
 
-	StockDashboardDto getCurrentHoldingStockDashboard(List<String> stockSymbols);
+	StockDashboardDTO getCurrentHoldingStockDashboard(List<String> stockSymbols);
 
-	FundDashboardDto getCurrentHoldingFundDashboard();
+	FundDashboardDTO getCurrentHoldingFundDashboard();
 
-	DividendDashboardDto getCurrentHoldingDividendDashboard();
+	DividendDashboardDTO getCurrentHoldingDividendDashboard();
 
-	ProfitLossDashboardDto getCurrentHoldingProfitLossDashboard();
+	ProfitLossDashboardDTO getCurrentHoldingProfitLossDashboard();
 
 }

@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import building.stockapp.dto.ProfitLossTableRowDto;
+import building.stockapp.dto.ProfitLossTableRowDTO;
 import building.stockapp.model.ProfitLoss;
 import building.stockapp.service.ProfitLossService;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -30,13 +31,13 @@ public class ProfitLossController {
 	}
 
 	@PostMapping()
-	public ResponseEntity<ProfitLoss> addProfitLoss(@RequestBody ProfitLoss profitLoss) {
+	public ResponseEntity<ProfitLoss> addProfitLoss(@RequestBody @Valid ProfitLoss profitLoss) {
 		LOGGER.log(Level.INFO, "Request received to add Profit/Loss {0}", profitLoss);
 		return new ResponseEntity<>(profitLossService.addProfitLoss(profitLoss), HttpStatus.CREATED);
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<ProfitLossTableRowDto>> getProfitLoss() {
+	public ResponseEntity<List<ProfitLossTableRowDTO>> getProfitLoss() {
 		LOGGER.log(Level.INFO, "Request received to get all added Profit/Loss entries");
 		return new ResponseEntity<>(profitLossService.getProfitLossForTable(), HttpStatus.OK);
 	}

@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class HistoricalQuoteBody {
 
-	String market;
-	String symbol;
-	LocalDate from;
-	LocalDate to;
-	Interval interval;
+	private String market;
+	private String symbol;
+	private LocalDate from;
+	private LocalDate to;
+	private Interval interval;
 
 }

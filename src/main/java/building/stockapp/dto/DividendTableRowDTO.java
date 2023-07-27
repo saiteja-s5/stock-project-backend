@@ -1,5 +1,6 @@
 package building.stockapp.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import lombok.Getter;
@@ -7,13 +8,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DividendTableRowDto {
+public class DividendTableRowDTO {
 
 	private String companyName;
 	private LocalDate creditedDate;
-	private Double creditedAmount;
+	private BigDecimal creditedAmount;
 
-	public DividendTableRowDto(String companyName, LocalDate creditedDate, Double creditedAmount) {
+	public DividendTableRowDTO(String companyName, LocalDate creditedDate, BigDecimal creditedAmount) {
 		super();
 		this.companyName = companyName;
 		this.creditedDate = creditedDate;

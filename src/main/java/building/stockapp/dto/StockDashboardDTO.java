@@ -1,5 +1,6 @@
 package building.stockapp.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import lombok.Builder;
@@ -9,12 +10,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class StockDashboardDto {
+public class StockDashboardDTO {
 
-	private Double stockInvestmentValue;
-	private Double stockCurrentValue;
-	private Double stockCurrentReturn;
-	private Double stockCurrentReturnPercent;
+	private BigDecimal stockInvestmentValue;
+	private BigDecimal stockCurrentValue;
+	private BigDecimal stockCurrentReturn;
+	private BigDecimal stockCurrentReturnPercent;
 	private LocalDate stockLastTransactionOn;
 	private LocalDate stockTableUpdatedOn;
 

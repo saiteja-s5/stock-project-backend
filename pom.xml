@@ -73,6 +73,12 @@
 			<artifactId>json</artifactId>
 			<version>20220924</version>
 		</dependency>
+		<!--
+		https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -126,7 +132,7 @@
 				<configuration>
 					<update>true</update>
 					<path>/${project.build.finalName}/v1</path>
-					<server>TomcatServer</server>
+					<server>${tomcat.server}</server>
 					<url>${release.server}/manager/text</url>
 				</configuration>
 			</plugin>

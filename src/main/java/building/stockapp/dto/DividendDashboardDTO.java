@@ -1,5 +1,6 @@
 package building.stockapp.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import lombok.Builder;
@@ -9,9 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class DividendDashboardDto {
+public class DividendDashboardDTO {
 
-	private Double dividendEarnedOverall;
+	private BigDecimal dividendEarnedOverall;
 	private LocalDate dividendLastTransactionOn;
 	private LocalDate dividendTableUpdatedOn;
 

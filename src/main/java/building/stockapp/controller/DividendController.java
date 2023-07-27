@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import building.stockapp.dto.DividendTableRowDto;
+import building.stockapp.dto.DividendTableRowDTO;
 import building.stockapp.model.Dividend;
 import building.stockapp.service.DividendService;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -30,13 +31,13 @@ public class DividendController {
 	}
 
 	@PostMapping()
-	public ResponseEntity<Dividend> addDividend(@RequestBody Dividend dividend) {
+	public ResponseEntity<Dividend> addDividend(@RequestBody @Valid Dividend dividend) {
 		LOGGER.log(Level.INFO, "Request received to add dividend");
 		return new ResponseEntity<>(dividendService.addDividend(dividend), HttpStatus.CREATED);
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<DividendTableRowDto>> getDividends() {
+	public ResponseEntity<List<DividendTableRowDTO>> getDividends() {
 		LOGGER.log(Level.INFO, "Request received to get all added dividends");
 		return new ResponseEntity<>(dividendService.getDividendsForTable(), HttpStatus.OK);
 	}

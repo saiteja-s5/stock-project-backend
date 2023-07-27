@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import building.stockapp.dto.FundTableRowDto;
+import building.stockapp.dto.FundTableRowDTO;
 import building.stockapp.model.Fund;
 import building.stockapp.service.FundService;
+import jakarta.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -30,13 +31,13 @@ public class FundController {
 	}
 
 	@PostMapping()
-	public ResponseEntity<Fund> addFund(@RequestBody Fund fund) {
+	public ResponseEntity<Fund> addFund(@RequestBody @Valid Fund fund) {
 		LOGGER.log(Level.INFO, "Request received to add fund");
 		return new ResponseEntity<>(fundService.addFund(fund), HttpStatus.CREATED);
 	}
 
 	@GetMapping()
-	public ResponseEntity<List<FundTableRowDto>> getFunds() {
+	public ResponseEntity<List<FundTableRowDTO>> getFunds() {
 		LOGGER.log(Level.INFO, "Request received to get all added funds");
 		return new ResponseEntity<>(fundService.getFundsForTable(), HttpStatus.OK);
 	}

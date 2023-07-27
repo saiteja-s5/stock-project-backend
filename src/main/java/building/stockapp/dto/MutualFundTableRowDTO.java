@@ -1,5 +1,6 @@
 package building.stockapp.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -9,18 +10,18 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MutualFundTableRowDto {
+public class MutualFundTableRowDTO {
 
 	private LocalDate investmentDate;
-	private Double amountAdded;
+	private BigDecimal amountAdded;
 	private String investmentType;
-	private Double unitsAlloted;
-	private Double nav;
+	private BigDecimal unitsAlloted;
+	private BigDecimal nav;
 	private Period holdDuration;
-	private Double overallReturnPercent;
+	private BigDecimal overallReturnPercent;
 
-	public MutualFundTableRowDto(LocalDate investmentDate, Double amountAdded, String investmentType,
-			Double unitsAlloted, Double nav) {
+	public MutualFundTableRowDTO(LocalDate investmentDate, BigDecimal amountAdded, String investmentType,
+			BigDecimal unitsAlloted, BigDecimal nav) {
 		super();
 		this.investmentDate = investmentDate;
 		this.amountAdded = amountAdded;
@@ -35,8 +36,8 @@ public class MutualFundTableRowDto {
 		return Period.between(investmentDate, LocalDate.now());
 	}
 
-	private Double overallReturnPercent() {
-		return Utility.roundTo(((0 - nav) / nav) * 100, 2);
+	private BigDecimal overallReturnPercent() {
+		return Utility.roundTo(((0 - nav.doubleValue()) / nav.doubleValue()) * 100, 2);
 	}
 
 }

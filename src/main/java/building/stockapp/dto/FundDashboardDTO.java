@@ -1,5 +1,6 @@
 package building.stockapp.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import lombok.Builder;
@@ -9,11 +10,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class FundDashboardDto {
+public class FundDashboardDTO {
 
-	private Double overallCashIn;
-	private Double overallCreditedAmount;
-	private Double overallDebitedAmount;
+	private BigDecimal overallCashIn;
+	private BigDecimal overallCreditedAmount;
+	private BigDecimal overallDebitedAmount;
 	private LocalDate fundLastTransactionOn;
 	private LocalDate fundTableUpdatedOn;
 

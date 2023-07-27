@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import building.stockapp.dto.DividendDashboardDto;
-import building.stockapp.dto.FundDashboardDto;
-import building.stockapp.dto.ProfitLossDashboardDto;
-import building.stockapp.dto.StockDashboardDto;
-import building.stockapp.dto.YahooQuoteDto;
+import building.stockapp.dto.DividendDashboardDTO;
+import building.stockapp.dto.FundDashboardDTO;
+import building.stockapp.dto.ProfitLossDashboardDTO;
+import building.stockapp.dto.StockDashboardDTO;
+import building.stockapp.dto.YahooQuoteDTO;
 import building.stockapp.model.HistoricalQuote;
 import building.stockapp.model.HistoricalQuoteBody;
 import building.stockapp.service.CompanyNameDropdownService;
@@ -46,7 +46,7 @@ public class MarketController {
 
 	// Single Stock with symbol + market
 	@GetMapping("/{market}/{stockSymbol}")
-	public ResponseEntity<YahooQuoteDto> getStockQuote(@PathVariable String market, @PathVariable String stockSymbol) {
+	public ResponseEntity<YahooQuoteDTO> getStockQuote(@PathVariable String market, @PathVariable String stockSymbol) {
 		if (market.equalsIgnoreCase("nse")) {
 			LOGGER.log(Level.INFO, "Request received to fetch {0} data from NSE", stockSymbol);
 		} else if (market.equalsIgnoreCase("bse")) {
@@ -57,7 +57,7 @@ public class MarketController {
 
 	// Multiple (All) Stocks from market
 	@GetMapping("/{market}")
-	public ResponseEntity<List<YahooQuoteDto>> getAllStocksQuote(@PathVariable String market) {
+	public ResponseEntity<List<YahooQuoteDTO>> getAllStocksQuote(@PathVariable String market) {
 		LOGGER.log(Level.INFO, "Request received to fetch all stock quotes from {0}", market);
 		List<String> allStockSymbols = new ArrayList<>();
 		companyNameDropdownService.getCompanyNameDropdowns()
@@ -67,7 +67,7 @@ public class MarketController {
 
 	// Multiple (Current Holdings) Stocks
 	@GetMapping("/current-stock-holdings")
-	public ResponseEntity<List<YahooQuoteDto>> getCurrentStockHoldingsQuote() {
+	public ResponseEntity<List<YahooQuoteDTO>> getCurrentStockHoldingsQuote() {
 		LOGGER.log(Level.INFO, "Request received to fetch all current stock holding quotes");
 		List<String> currentHoldingStockSymbols = new ArrayList<>();
 		stockService.getStocks().forEach(stock -> currentHoldingStockSymbols.add(stock.getStockName()));
@@ -85,7 +85,7 @@ public class MarketController {
 
 	// Current Stock Holding Dashboard
 	@GetMapping("/stock-dashboard")
-	public ResponseEntity<StockDashboardDto> getCurrentHoldingStockDashboard() {
+	public ResponseEntity<StockDashboardDTO> getCurrentHoldingStockDashboard() {
 		LOGGER.log(Level.INFO, "Request received to fetch current stock holding dashboard");
 		List<String> currentHoldingStockSymbols = new ArrayList<>();
 		stockService.getStocks().forEach(stock -> currentHoldingStockSymbols.add(stock.getStockName()));
@@ -95,21 +95,21 @@ public class MarketController {
 
 	// Current Fund Holding Dashboard
 	@GetMapping("/fund-dashboard")
-	public ResponseEntity<FundDashboardDto> getCurrentHoldingFundDashboard() {
+	public ResponseEntity<FundDashboardDTO> getCurrentHoldingFundDashboard() {
 		LOGGER.log(Level.INFO, "Request received to fetch current fund holding dashboard");
 		return new ResponseEntity<>(marketService.getCurrentHoldingFundDashboard(), HttpStatus.OK);
 	}
 
 	// Current Dividend Holding Dashboard
 	@GetMapping("/dividend-dashboard")
-	public ResponseEntity<DividendDashboardDto> getCurrentHoldingDividendDashboard() {
+	public ResponseEntity<DividendDashboardDTO> getCurrentHoldingDividendDashboard() {
 		LOGGER.log(Level.INFO, "Request received to fetch current dividend holding dashboard");
 		return new ResponseEntity<>(marketService.getCurrentHoldingDividendDashboard(), HttpStatus.OK);
 	}
 
 	// Current Profit Loss Holding Dashboard
 	@GetMapping("/profit-loss-dashboard")
-	public ResponseEntity<ProfitLossDashboardDto> getCurrentHoldingProfitLossDashboard() {
+	public ResponseEntity<ProfitLossDashboardDTO> getCurrentHoldingProfitLossDashboard() {
 		LOGGER.log(Level.INFO, "Request received to fetch current profit and loss holding dashboard");
 		return new ResponseEntity<>(marketService.getCurrentHoldingProfitLossDashboard(), HttpStatus.OK);
 	}

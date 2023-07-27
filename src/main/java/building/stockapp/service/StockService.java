@@ -2,7 +2,7 @@ package building.stockapp.service;
 
 import java.util.List;
 
-import building.stockapp.dto.StockTableRowDto;
+import building.stockapp.dto.StockTableRowDTO;
 import building.stockapp.model.Stock;
 
 public interface StockService {
@@ -15,6 +15,6 @@ public interface StockService {
 
 	void deleteStock(Long stockId);
 
-	List<StockTableRowDto> getStocksForTable();
+	List<StockTableRowDTO> getStocksForTable();
 
 }

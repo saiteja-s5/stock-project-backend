@@ -24,11 +24,11 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import building.stockapp.dto.DividendDashboardDto;
-import building.stockapp.dto.FundDashboardDto;
-import building.stockapp.dto.ProfitLossDashboardDto;
-import building.stockapp.dto.StockDashboardDto;
-import building.stockapp.dto.YahooQuoteDto;
+import building.stockapp.dto.DividendDashboardDTO;
+import building.stockapp.dto.FundDashboardDTO;
+import building.stockapp.dto.ProfitLossDashboardDTO;
+import building.stockapp.dto.StockDashboardDTO;
+import building.stockapp.dto.YahooQuoteDTO;
 import building.stockapp.model.Dividend;
 import building.stockapp.model.Fund;
 import building.stockapp.model.HistoricalQuote;
@@ -60,7 +60,7 @@ public class MarketServiceImpl implements MarketService {
 	private static String cookie = "A1=d=AQABBAVGnWMCEMQWQR36X4J3ijLpLPruWaYFEgEBCAGuhmS2ZFlQb2UB_eMBAAcIBUadY_ruWaY&S=AQAAAhy9uDwG2WFWWTzYTd-bT6Y; A3=d=AQABBAVGnWMCEMQWQR36X4J3ijLpLPruWaYFEgEBCAGuhmS2ZFlQb2UB_eMBAAcIBUadY_ruWaY&S=AQAAAhy9uDwG2WFWWTzYTd-bT6Y; cmp=t=1686463791&j=0&u=1---; gam_id=y-dgF31zJE2uKlSQ7em1AyJvOfFxbN45Oc~A; B=acmfev9hpqhg5&b=3&s=3p; GUC=AQEBCAFkhq5ktkIjtAT5; PRF=t%3DAPI%26newChartbetateaser%3D0%252C1687673503957; tbla_id=60e25e2e-9d52-41f6-8102-b1f281df14e9-tuctb7eeb33; A1S=d=AQABBAVGnWMCEMQWQR36X4J3ijLpLPruWaYFEgEBCAGuhmS2ZFlQb2UB_eMBAAcIBUadY_ruWaY&S=AQAAAhy9uDwG2WFWWTzYTd-bT6Y&j=WORLD";
 
 	@Override
-	public YahooQuoteDto getQuote(String market, String symbol) {
+	public YahooQuoteDTO getQuote(String market, String symbol) {
 		String marketExtension = getMarketExtension(market);
 		URIBuilder builder = new URIBuilder().setScheme("https").setHost("query1.finance.yahoo.com")
 				.setPath("/v7/finance/quote").addParameter("symbols", symbol + marketExtension)
@@ -73,7 +73,7 @@ public class MarketServiceImpl implements MarketService {
 			JSONObject response = new JSONObject(client.send(request, HttpResponse.BodyHandlers.ofString()).body());
 			LOGGER.log(Level.INFO, "Response received from {0}", uri);
 			String quoteAsString = response.getJSONObject("quoteResponse").getJSONArray("result").get(0).toString();
-			YahooQuoteDto fetchedResponse = new ObjectMapper().readValue(quoteAsString, YahooQuoteDto.class);
+			YahooQuoteDTO fetchedResponse = new ObjectMapper().readValue(quoteAsString, YahooQuoteDTO.class);
 			LOGGER.log(Level.INFO, "Response mapping to DTO is completed");
 			return fetchedResponse;
 		} catch (InterruptedException ie) {
@@ -82,7 +82,7 @@ public class MarketServiceImpl implements MarketService {
 		} catch (JSONException | IOException | URISyntaxException e) {
 			LOGGER.log(Level.WARNING, "Exception occured {0}", e.getMessage());
 		}
-		return new YahooQuoteDto();
+		return new YahooQuoteDTO();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -136,23 +136,24 @@ public class MarketServiceImpl implements MarketService {
 	}
 
 	@Override
-	public List<YahooQuoteDto> getQuotes(String market, List<String> symbols) {
+	public List<YahooQuoteDTO> getQuotes(String market, List<String> symbols) {
 		LOGGER.log(Level.INFO, "Getting all stock quotes");
-		List<YahooQuoteDto> stocks = new ArrayList<>();
+		List<YahooQuoteDTO> stocks = new ArrayList<>();
 		symbols.forEach(stockSymbol -> stocks.add(getQuote(market, stockSymbol)));
+		stocks.sort((q1, q2) -> q2.getRegularMarketChangePercent().compareTo(q1.getRegularMarketChangePercent()));
 		LOGGER.log(Level.INFO, "Retrieved {0} stock quotes sucessfully", stocks.size());
 		return stocks;
 	}
 
 	@Override
-	public StockDashboardDto getCurrentHoldingStockDashboard(List<String> stockSymbols) {
+	public StockDashboardDTO getCurrentHoldingStockDashboard(List<String> stockSymbols) {
 		LOGGER.log(Level.INFO, "Getting current stock holding dashboard");
 		List<Stock> boughtStocks = stockRepository.findAll();
 		Double stockInvestmentValue = boughtStocks.stream()
-				.mapToDouble(stock -> stock.getBuyPrice() * stock.getQuantity()).sum();
+				.mapToDouble(stock -> stock.getBuyPrice().doubleValue() * stock.getQuantity()).sum();
 		Double stockCurrentValue = boughtStocks.stream()
-				.mapToDouble(
-						stock -> getQuote("NSE", stock.getStockName()).getRegularMarketPrice() * stock.getQuantity())
+				.mapToDouble(stock -> getQuote("NSE", stock.getStockName()).getRegularMarketPrice().doubleValue()
+						* stock.getQuantity())
 				.sum();
 		Double stockCurrentReturn = stockCurrentValue - stockInvestmentValue;
 		Double stockCurrentReturnPercent = (stockCurrentReturn * 100) / stockInvestmentValue;
@@ -162,27 +163,32 @@ public class MarketServiceImpl implements MarketService {
 		Optional<MiscellaneousRecord> miscRecord = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY);
 		LocalDate stockTableUpdatedOn = miscRecord.isPresent() ? miscRecord.get().getStockTableUpdatedOn()
 				: Utility.STOCK_START_DATE;
-		StockDashboardDto fetchedDto = StockDashboardDto.builder().stockInvestmentValue(stockInvestmentValue)
-				.stockCurrentValue(stockCurrentValue).stockCurrentReturn(stockCurrentReturn)
-				.stockCurrentReturnPercent(stockCurrentReturnPercent).stockLastTransactionOn(stockLastTransactionOn)
-				.stockTableUpdatedOn(stockTableUpdatedOn).build();
+		StockDashboardDTO fetchedDto = StockDashboardDTO.builder()
+				.stockInvestmentValue(BigDecimal.valueOf(stockInvestmentValue))
+				.stockCurrentValue(BigDecimal.valueOf(stockCurrentValue))
+				.stockCurrentReturn(BigDecimal.valueOf(stockCurrentReturn))
+				.stockCurrentReturnPercent(BigDecimal.valueOf(stockCurrentReturnPercent))
+				.stockLastTransactionOn(stockLastTransactionOn).stockTableUpdatedOn(stockTableUpdatedOn).build();
 		LOGGER.log(Level.INFO, "Current stock holding dashboard fetched sucessfully");
 		return fetchedDto;
 	}
 
 	@Override
-	public FundDashboardDto getCurrentHoldingFundDashboard() {
+	public FundDashboardDTO getCurrentHoldingFundDashboard() {
 		LOGGER.log(Level.INFO, "Getting current fund holding dashboard");
 		List<Fund> allFunds = fundRepository.findAll();
-		Double overallCreditedAmount = allFunds.stream().mapToDouble(Fund::getCreditedAmount).sum();
-		Double overallDebitedAmount = allFunds.stream().mapToDouble(Fund::getDebitedAmount).sum();
-		Double overallCashIn = overallCreditedAmount - overallDebitedAmount;
+		BigDecimal overallCreditedAmount = allFunds.stream().map(Fund::getCreditedAmount).reduce(BigDecimal.ZERO,
+				BigDecimal::add);
+		BigDecimal overallDebitedAmount = allFunds.stream().map(Fund::getDebitedAmount).reduce(BigDecimal.ZERO,
+				BigDecimal::add);
+		BigDecimal overallCashIn = BigDecimal
+				.valueOf(overallCreditedAmount.doubleValue() - overallDebitedAmount.doubleValue());
 		Optional<Fund> fund = allFunds.stream().max(Comparator.comparing(Fund::getTransactionDate));
 		LocalDate fundLastTransactionOn = fund.isPresent() ? fund.get().getTransactionDate() : Utility.FUND_START_DATE;
 		Optional<MiscellaneousRecord> miscRecord = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY);
 		LocalDate fundTableUpdatedOn = miscRecord.isPresent() ? miscRecord.get().getFundTableUpdatedOn()
 				: Utility.FUND_START_DATE;
-		FundDashboardDto fetchedDto = FundDashboardDto.builder().overallCashIn(overallCashIn)
+		FundDashboardDTO fetchedDto = FundDashboardDTO.builder().overallCashIn(overallCashIn)
 				.overallCreditedAmount(overallCreditedAmount).overallDebitedAmount(overallDebitedAmount)
 				.fundLastTransactionOn(fundLastTransactionOn).fundTableUpdatedOn(fundTableUpdatedOn).build();
 		LOGGER.log(Level.INFO, "Current fund holding dashboard fetched sucessfully");
@@ -190,17 +196,18 @@ public class MarketServiceImpl implements MarketService {
 	}
 
 	@Override
-	public DividendDashboardDto getCurrentHoldingDividendDashboard() {
+	public DividendDashboardDTO getCurrentHoldingDividendDashboard() {
 		LOGGER.log(Level.INFO, "Getting current dividend holding dashboard");
 		List<Dividend> allDividends = dividendRepository.findAll();
-		Double dividendEarnedOverall = allDividends.stream().mapToDouble(Dividend::getCreditedAmount).sum();
+		BigDecimal dividendEarnedOverall = allDividends.stream().map(Dividend::getCreditedAmount)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
 		Optional<Dividend> dividend = allDividends.stream().max(Comparator.comparing(Dividend::getCreditedDate));
 		LocalDate dividendLastTransactionOn = dividend.isPresent() ? dividend.get().getCreditedDate()
 				: Utility.DIVIDEND_START_DATE;
 		Optional<MiscellaneousRecord> miscRecord = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY);
 		LocalDate dividendTableUpdatedOn = miscRecord.isPresent() ? miscRecord.get().getDividendTableUpdatedOn()
 				: Utility.DIVIDEND_START_DATE;
-		DividendDashboardDto fetchedDto = DividendDashboardDto.builder().dividendEarnedOverall(dividendEarnedOverall)
+		DividendDashboardDTO fetchedDto = DividendDashboardDTO.builder().dividendEarnedOverall(dividendEarnedOverall)
 				.dividendLastTransactionOn(dividendLastTransactionOn).dividendTableUpdatedOn(dividendTableUpdatedOn)
 				.build();
 		LOGGER.log(Level.INFO, "Current dividend holding dashboard fetched sucessfully");
@@ -208,12 +215,15 @@ public class MarketServiceImpl implements MarketService {
 	}
 
 	@Override
-	public ProfitLossDashboardDto getCurrentHoldingProfitLossDashboard() {
+	public ProfitLossDashboardDTO getCurrentHoldingProfitLossDashboard() {
 		LOGGER.log(Level.INFO, "Getting current profit and loss holding dashboard");
 		List<ProfitLoss> allpls = profitLossRepository.findAll();
-		Double overallBoughtAmount = allpls.stream().mapToDouble(pl -> pl.getBought().getBoughtPrice()).sum();
-		Double overallSoldAmount = allpls.stream().mapToDouble(pl -> pl.getSold().getSoldPrice()).sum();
-		Double profitLossEarnedOverall = overallSoldAmount - overallBoughtAmount;
+		BigDecimal overallBoughtAmount = allpls.stream().map(pl -> pl.getBought().getBoughtPrice())
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+		BigDecimal overallSoldAmount = allpls.stream().map(pl -> pl.getSold().getSoldPrice()).reduce(BigDecimal.ZERO,
+				BigDecimal::add);
+		BigDecimal profitLossEarnedOverall = BigDecimal
+				.valueOf(overallSoldAmount.doubleValue() - overallBoughtAmount.doubleValue());
 		Comparator<ProfitLoss> lastDateComparator = (pl1, pl2) -> pl1.getSold().getSoldDate()
 				.compareTo(pl2.getSold().getSoldDate());
 		Optional<ProfitLoss> pl = allpls.stream().max(lastDateComparator);
@@ -222,12 +232,15 @@ public class MarketServiceImpl implements MarketService {
 		Optional<MiscellaneousRecord> miscRecord = miscRecordRepository.findById(Utility.MISC_TABLE_PRIMARY_KEY);
 		LocalDate plTableUpdatedOn = miscRecord.isPresent() ? miscRecord.get().getProfitLossTableUpdatedOn()
 				: Utility.SOLD_START_DATE;
-		Double overallProfitLossPercent = (profitLossEarnedOverall * 100) / overallBoughtAmount;
-		Double averageReturnPerTransaction = profitLossEarnedOverall / allpls.size();
-		Double averageReturnPerTransactionPercent = allpls.stream().mapToDouble(profitLoss -> Utility
-				.percentageReturn(profitLoss.getBought().getBoughtPrice(), profitLoss.getSold().getSoldPrice())).sum()
-				/ allpls.size();
-		ProfitLossDashboardDto fetchedDto = ProfitLossDashboardDto.builder()
+		BigDecimal overallProfitLossPercent = BigDecimal
+				.valueOf((profitLossEarnedOverall.doubleValue() * 100) / overallBoughtAmount.doubleValue());
+		BigDecimal averageReturnPerTransaction = BigDecimal
+				.valueOf(profitLossEarnedOverall.doubleValue() / allpls.size());
+		BigDecimal averageReturnPerTransactionPercent = allpls.stream()
+				.map(profitLoss -> Utility.percentageReturn(profitLoss.getBought().getBoughtPrice().doubleValue(),
+						profitLoss.getSold().getSoldPrice().doubleValue()))
+				.reduce(BigDecimal.ZERO, BigDecimal::add).divide(BigDecimal.valueOf(allpls.size()));
+		ProfitLossDashboardDTO fetchedDto = ProfitLossDashboardDTO.builder()
 				.profitLossEarnedOverall(profitLossEarnedOverall).overallBoughtAmount(overallBoughtAmount)
 				.overallSoldAmount(overallSoldAmount).overallProfitLossPercent(overallProfitLossPercent)
 				.averageReturnPerTransaction(averageReturnPerTransaction)
