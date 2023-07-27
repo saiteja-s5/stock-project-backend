@@ -7,14 +7,14 @@ import building.stockapp.model.Stock;
 
 public interface StockService {
 
-	Stock addStock(Stock stock);
-
-	List<Stock> getStocks();
+	Long addStock(Stock stock);
 
 	Stock getStockById(Long stockId);
 
-	void deleteStock(Long stockId);
+	List<Stock> getStocks();
 
 	List<StockTableRowDTO> getStocksForTable();
+
+	void deleteStock(Long stockId);
 
 }

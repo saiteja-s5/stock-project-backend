@@ -1,8 +1,6 @@
 package building.stockapp.controller;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,40 +17,39 @@ import building.stockapp.dto.StockTableRowDTO;
 import building.stockapp.model.Stock;
 import building.stockapp.service.StockService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @CrossOrigin
+@Slf4j
+@AllArgsConstructor
 @RestController
 @RequestMapping("/stocks")
 public class StockController {
 
-	private StockService stockService;
-	private static final Logger LOGGER = Logger.getLogger(StockController.class.getName());
-
-	public StockController(StockService stockService) {
-		this.stockService = stockService;
-	}
+	private final StockService stockService;
 
 	@PostMapping()
-	public ResponseEntity<Stock> addStock(@RequestBody @Valid Stock stock) {
-		LOGGER.log(Level.INFO, "Request received to add stock {0}", stock.getStockName());
+	public ResponseEntity<Long> addStock(@RequestBody @Valid Stock stock) {
+		log.info("Request received to add stock:{0}", stock.getStockName());
 		return new ResponseEntity<>(stockService.addStock(stock), HttpStatus.CREATED);
-	}
-
-	@GetMapping("/table")
-	public ResponseEntity<List<StockTableRowDTO>> getStocksForTable() {
-		LOGGER.log(Level.INFO, "Request received to get all added stocks for populating in table");
-		return new ResponseEntity<>(stockService.getStocksForTable(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{stockId}")
 	public ResponseEntity<Stock> getStockById(@PathVariable Long stockId) {
-		LOGGER.log(Level.INFO, "Request received to get stock with Stock ID {0}", stockId);
+		log.info("Request received to get Stock with Id:{0}", stockId);
 		return new ResponseEntity<>(stockService.getStockById(stockId), HttpStatus.OK);
+	}
+
+	@GetMapping("/table")
+	public ResponseEntity<List<StockTableRowDTO>> getStocksForTable() {
+		log.info("Request received to get all added stocks for table");
+		return new ResponseEntity<>(stockService.getStocksForTable(), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{stockId}")
 	public ResponseEntity<Void> deleteStock(@PathVariable Long stockId) {
-		LOGGER.log(Level.INFO, "Request received to delete stock with Stock ID {0}", stockId);
+		log.info("Request received to delete Stock with Id:{0}", stockId);
 		stockService.deleteStock(stockId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

@@ -30,28 +30,28 @@ public class Stock {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "stock_id", unique = true)
+	@Column(name = "stock_id")
 	private Long stockId;
 
 	@NotEmpty(message = "Stock Name field is Mandatory")
-	@Column(name = "stock_name", length = 20, nullable = false)
+	@Column(name = "stock_name", length = 20)
 	private String stockName;
 
 	@NotNull(message = "Investment Date field is Mandatory")
 	@PastOrPresent(message = "Investment Date cannot be furthur than today")
-	@Column(name = "investment_date", nullable = false)
+	@Column(name = "investment_date")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate investmentDate;
 
 	@NotNull(message = "Quantity field is Mandatory")
 	@Min(value = 1, message = "Buy Quantity should be atleast 1")
-	@Column(name = "quantity", nullable = false)
+	@Column(name = "quantity")
 	private Integer quantity;
 
 	@NotNull(message = "Buy Price field is Mandatory")
-	@Digits(integer = 10, fraction = 2, message = "Buy Price accept's two decimal places")
+	@Digits(integer = 10, fraction = 2, message = "Buy Price accepts only two decimal places")
 	@DecimalMin(value = "0.01", message = "Buy Price should be atleast 0.01")
-	@Column(name = "buy_price", nullable = false)
+	@Column(name = "buy_price")
 	private BigDecimal buyPrice;
 
 	public Stock(String stockName, LocalDate investmentDate, Integer quantity, BigDecimal buyPrice) {
