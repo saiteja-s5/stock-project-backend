@@ -19,7 +19,7 @@ import building.stockapp.model.ErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
-public class ControllerExceptionHandler {
+public class ExceptionHandlerAdvice {
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorMessage> handleResourceNotFoundException(ResourceNotFoundException rnfe,
