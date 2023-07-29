@@ -7,7 +7,7 @@ import building.stockapp.model.Stock;
 
 public interface StockService {
 
-	Long addStock(Stock stock);
+	Long postStock(Stock stock);
 
 	Stock getStockById(Long stockId);
 

@@ -33,24 +33,24 @@ public class Stock {
 	@Column(name = "stock_id")
 	private Long stockId;
 
-	@NotEmpty(message = "Stock Name field is Mandatory")
+	@NotEmpty(message = "{mandatory}")
 	@Column(name = "stock_name", length = 20)
 	private String stockName;
 
-	@NotNull(message = "Investment Date field is Mandatory")
-	@PastOrPresent(message = "Investment Date cannot be furthur than today")
+	@NotNull(message = "{mandatory}")
+	@PastOrPresent(message = "{future}")
 	@Column(name = "investment_date")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private LocalDate investmentDate;
 
-	@NotNull(message = "Quantity field is Mandatory")
-	@Min(value = 1, message = "Buy Quantity should be atleast 1")
+	@NotNull(message = "{mandatory}")
+	@Min(value = 1, message = "{numeric-minimum}")
 	@Column(name = "quantity")
 	private Integer quantity;
 
-	@NotNull(message = "Buy Price field is Mandatory")
-	@Digits(integer = 10, fraction = 2, message = "Buy Price accepts only two decimal places")
-	@DecimalMin(value = "0.01", message = "Buy Price should be atleast 0.01")
+	@NotNull(message = "{mandatory}")
+	@Digits(integer = 10, fraction = 2, message = "{decimal-places}")
+	@DecimalMin(value = "0.01", message = "{decimal-minimum-2-digits}")
 	@Column(name = "buy_price")
 	private BigDecimal buyPrice;
 

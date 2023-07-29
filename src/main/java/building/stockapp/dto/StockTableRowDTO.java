@@ -51,4 +51,10 @@ public class StockTableRowDTO {
 				Utility.getPercentTarget(2.0, holdDuration(), quantity, buyPrice.doubleValue()).doubleValue(), 2);
 	}
 
+	@Override
+	public String toString() {
+		return stockName + "," + quantity + "," + buyDate + "," + buyPrice + "," + buyValue + "," + holdDuration + ","
+				+ onePercentTarget + "," + twoPercentTarget;
+	}
+
 }

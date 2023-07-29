@@ -52,9 +52,9 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(ResourceNotDeletedException.class)
 	public ResponseEntity<ErrorMessage> handleResourceNotDeletedException(ResourceNotDeletedException rnde,
 			HttpServletRequest request) {
-		ErrorMessage message = ErrorMessage.builder().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+		ErrorMessage message = ErrorMessage.builder().statusCode(HttpStatus.BAD_REQUEST.value())
 				.timestamp(LocalDateTime.now()).message(rnde.getMessage()).path(request.getRequestURI()).build();
-		return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(TableEmptyException.class)
