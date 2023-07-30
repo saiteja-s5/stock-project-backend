@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import building.stockapp.exception.ResourceNotAddedException;
 import building.stockapp.exception.ResourceNotDeletedException;
+import building.stockapp.exception.ResourceNotDownloadedException;
 import building.stockapp.exception.ResourceNotFoundException;
 import building.stockapp.exception.TableEmptyException;
 import building.stockapp.exception.TableFetchException;
@@ -68,6 +69,14 @@ public class ExceptionHandlerAdvice {
 	public ResponseEntity<ErrorMessage> handleTableFetchException(TableFetchException tfe, HttpServletRequest request) {
 		ErrorMessage message = ErrorMessage.builder().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
 				.timestamp(LocalDateTime.now()).message(tfe.getMessage()).path(request.getRequestURI()).build();
+		return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(ResourceNotDownloadedException.class)
+	public ResponseEntity<ErrorMessage> handleResourceNotDownloadedException(ResourceNotDownloadedException rnde,
+			HttpServletRequest request) {
+		ErrorMessage message = ErrorMessage.builder().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+				.timestamp(LocalDateTime.now()).message(rnde.getMessage()).path(request.getRequestURI()).build();
 		return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 

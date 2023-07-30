@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 
+import building.stockapp.model.Stock;
 import building.stockapp.utility.Utility;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,10 @@ public class StockTableRowDTO {
 		this.holdDuration = holdDuration();
 		this.onePercentTarget = onePercentTarget();
 		this.twoPercentTarget = twoPercentTarget();
+	}
+
+	public StockTableRowDTO(Stock stock) {
+		this(stock.getStockName(), stock.getQuantity(), stock.getInvestmentDate(), stock.getBuyPrice());
 	}
 
 	private BigDecimal buyValue() {
