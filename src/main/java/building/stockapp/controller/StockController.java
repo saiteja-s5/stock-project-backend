@@ -20,8 +20,8 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @CrossOrigin
-@AllArgsConstructor
 @RestController
+@AllArgsConstructor
 @RequestMapping("/stocks")
 public class StockController {
 

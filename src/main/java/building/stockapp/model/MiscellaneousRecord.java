@@ -17,8 +17,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "miscellaneous_record")
@@ -36,38 +36,38 @@ public class MiscellaneousRecord {
 
 	@NotNull(message = "Stock Table Updated Date field is Mandatory")
 	@PastOrPresent(message = "Stock Table Updated Date cannot be furthur than today")
-	@Column(name = "stock_updated_date", nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "stock_updated_date", nullable = false)
 	private LocalDate stockTableUpdatedOn;
 
 	@NotNull(message = "Mutual Fund Table Updated Date field is Mandatory")
 	@PastOrPresent(message = "Mutual Fund Table Updated Date cannot be furthur than today")
-	@Column(name = "mutual_fund_updated_date", nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "mutual_fund_updated_date", nullable = false)
 	private LocalDate mutualFundTableUpdatedOn;
 
 	@NotNull(message = "Fund Table Updated Date field is Mandatory")
 	@PastOrPresent(message = "Fund Table Updated Date cannot be furthur than today")
-	@Column(name = "fund_updated_date", nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "fund_updated_date", nullable = false)
 	private LocalDate fundTableUpdatedOn;
 
 	@NotNull(message = "Dividend Table Updated Date field is Mandatory")
 	@PastOrPresent(message = "Dividend Table Updated Date cannot be furthur than today")
-	@Column(name = "dividend_updated_date", nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "dividend_updated_date", nullable = false)
 	private LocalDate dividendTableUpdatedOn;
 
 	@NotNull(message = "Profit/Loss Table Updated Date field is Mandatory")
 	@PastOrPresent(message = "Profit/Loss Table Updated Date cannot be furthur than today")
-	@Column(name = "profit_loss_updated_date", nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "profit_loss_updated_date", nullable = false)
 	private LocalDate profitLossTableUpdatedOn;
 
 	@NotNull(message = "Gold Table Updated Date field is Mandatory")
 	@PastOrPresent(message = "Gold Table Updated Date cannot be furthur than today")
-	@Column(name = "gold_updated_date", nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "gold_updated_date", nullable = false)
 	private LocalDate goldTableUpdatedOn;
 
 	public MiscellaneousRecord(BigDecimal cashAvailableForInvesting, LocalDate stockTableUpdatedOn,

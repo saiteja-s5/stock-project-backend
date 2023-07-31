@@ -16,15 +16,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
-@Embeddable
 public class Bought {
 
 	@NotNull(message = "Bought Date field is Mandatory")
 	@PastOrPresent(message = "Bought Date cannot be furthur than today")
-	@Column(name = "bought_date", nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "bought_date", nullable = false)
 	private LocalDate boughtDate;
 
 	@NotNull(message = "Bought Price field is Mandatory")

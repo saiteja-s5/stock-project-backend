@@ -7,8 +7,8 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 import lombok.extern.log4j.Log4j2;
 
-@SpringBootApplication
 @Log4j2
+@SpringBootApplication
 public class StockAppApplication extends SpringBootServletInitializer {
 
 	@Override

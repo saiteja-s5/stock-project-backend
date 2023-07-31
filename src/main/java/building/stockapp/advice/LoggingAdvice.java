@@ -12,8 +12,8 @@ import org.springframework.util.StopWatch;
 import lombok.extern.log4j.Log4j2;
 
 @Aspect
-@Component
 @Log4j2
+@Component
 public class LoggingAdvice {
 
 	@Pointcut("within(building.stockapp.controller..*) " + "|| within(building.stockapp.service.impl..*) "

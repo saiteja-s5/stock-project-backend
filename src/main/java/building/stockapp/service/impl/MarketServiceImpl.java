@@ -85,8 +85,8 @@ public class MarketServiceImpl implements MarketService {
 		return new YahooQuoteDTO();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<HistoricalQuote> getHistory(String market, String symbol, LocalDate from, LocalDate to,
 			Interval interval) {
 		List<HistoricalQuote> history = new ArrayList<>();

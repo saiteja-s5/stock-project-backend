@@ -19,8 +19,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "fund")
@@ -33,8 +33,8 @@ public class Fund {
 
 	@NotNull(message = "Transaction Date field is Mandatory")
 	@PastOrPresent(message = "Transaction Date cannot be furthur than today")
-	@Column(name = "transaction_date", nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "transaction_date", nullable = false)
 	private LocalDate transactionDate;
 
 	@NotNull(message = "Credited Amount field is Mandatory")

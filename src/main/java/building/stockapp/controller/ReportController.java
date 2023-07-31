@@ -16,8 +16,8 @@ import building.stockapp.service.ExcelReportService;
 import lombok.AllArgsConstructor;
 
 @CrossOrigin
-@AllArgsConstructor
 @RestController
+@AllArgsConstructor
 @RequestMapping("/reports")
 public class ReportController {
 

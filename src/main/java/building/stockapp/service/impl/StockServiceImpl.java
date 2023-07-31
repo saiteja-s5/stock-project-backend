@@ -17,8 +17,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class StockServiceImpl implements StockService {
 
 	private final StockRepository stockRepository;

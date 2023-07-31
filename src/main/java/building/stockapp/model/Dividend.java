@@ -38,8 +38,8 @@ public class Dividend {
 
 	@NotNull(message = "Credited Date field is Mandatory")
 	@PastOrPresent(message = "Credited Date cannot be furthur than today")
-	@Column(name = "credited_date", nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "credited_date", nullable = false)
 	private LocalDate creditedDate;
 
 	@NotNull(message = "Credited Amount field is Mandatory")

@@ -15,16 +15,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "portfolio")
 public class Portfolio {
 
 	@Id
-	@Column(name = "trade_date", nullable = false)
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "trade_date", nullable = false)
 	private LocalDate tradeDate;
 
 	@NotNull(message = "Portfolio value field is Mandatory")

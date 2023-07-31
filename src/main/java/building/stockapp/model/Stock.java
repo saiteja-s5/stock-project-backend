@@ -22,8 +22,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,8 +41,8 @@ public class Stock {
 
 	@NotNull(message = "{mandatory}")
 	@PastOrPresent(message = "{future}")
-	@Column(name = "investment_date")
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "investment_date")
 	private LocalDate investmentDate;
 
 	@NotNull(message = "{mandatory}")
