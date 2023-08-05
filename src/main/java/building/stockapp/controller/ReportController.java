@@ -29,8 +29,19 @@ public class ReportController {
 		byte[] excelData = excelReportService.generateExcelForAllRecords();
 		ByteArrayResource resource = new ByteArrayResource(excelData);
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName)
+				.header("Access-Control-Expose-Headers", "Content-Disposition")
 				.contentLength(excelData.length).contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
 				.body(resource);
+	}
+
+	@GetMapping("/stocks")
+	public ResponseEntity<Resource> getAllStockRecords() {
+		String fileName = "StockReport-" + LocalDate.now() + ".xlsx";
+		byte[] excelData = excelReportService.generateExcelForStockRecords();
+		ByteArrayResource resource = new ByteArrayResource(excelData);
+		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName)
+				.header("Access-Control-Expose-Headers", "Content-Disposition").contentLength(excelData.length)
+				.contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(resource);
 	}
 
 }

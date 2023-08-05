@@ -13,9 +13,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
+import building.stockapp.dto.StockTableRowDTO;
 import building.stockapp.exception.ResourceNotDownloadedException;
-import building.stockapp.model.ExcelReportProperties;
+import building.stockapp.model.ExcelReportDataProperties;
+import building.stockapp.repository.StockRepository;
 import building.stockapp.service.ExcelReportService;
+import building.stockapp.utility.ExcelUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -26,7 +29,45 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 
 	private final ApplicationContext applicationContext;
 
-	private final ExcelReportProperties excelProperties;
+	private final ExcelReportDataProperties excelDataProperties;
+
+	private final ExcelUtil excelUtil;
+
+	private final StockRepository stockRepository;
+
+	@Override
+	public byte[] generateExcelForStockRecords() {
+		try (XSSFWorkbook workbook = new XSSFWorkbook(); ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			XSSFSheet sheet = workbook.createSheet(excelDataProperties.getStockSheetName());
+			XSSFRow headerRow = sheet.createRow(0);
+			String[] stockSheetHeaders = excelDataProperties.getStockSheetHeaders();
+			int headerColNumber = 0;
+			for (String header : stockSheetHeaders) {
+				XSSFCell cell = headerRow.createCell(headerColNumber++);
+				cell.setCellValue(header);
+				cell.setCellStyle(excelUtil.getStyleForHeaders(workbook));
+			}
+			List<StockTableRowDTO> stocks = stockRepository.getAllStocksForTable();
+			int rowNumber = 1;
+			for (StockTableRowDTO stock : stocks) {
+				XSSFRow row = sheet.createRow(rowNumber++);
+				String[] entityProperties = stock.toString().split(",");
+				int columnNumber = 0;
+				for (String property : entityProperties) {
+					int tempColNumber = columnNumber++;
+					XSSFCell cell = row.createCell(tempColNumber);
+					fillCell(cell, property);
+					cell.setCellStyle(excelUtil.getStyleForBody(workbook));
+					sheet.autoSizeColumn(tempColNumber);
+				}
+			}
+			workbook.write(baos);
+			return baos.toByteArray();
+		} catch (Exception e) {
+			log.error("Unable to generate stock excel, an exception occured", e);
+			throw new ResourceNotDownloadedException(e.getMessage());
+		}
+	}
 
 	@Override
 	public byte[] generateExcelForAllRecords() {
@@ -34,7 +75,7 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 		final StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		try (XSSFWorkbook workbook = new XSSFWorkbook(); ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-			for (String className : excelProperties.getReportClasses()) {
+			for (String className : excelDataProperties.getAllReportClasses()) {
 				XSSFSheet sheet = workbook.createSheet(className);
 				log.debug(String.format("Writing to Sheet:%s", className));
 				Class<?> reportClass = Class.forName("building.stockapp.repository." + className + "Repository");
