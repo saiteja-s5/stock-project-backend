@@ -14,10 +14,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StopWatch;
 
+import building.stockapp.dto.FundTableRowDTO;
 import building.stockapp.dto.StockTableRowDTO;
 import building.stockapp.exception.ResourceNotDownloadedException;
 import building.stockapp.model.EmailProperties;
 import building.stockapp.model.ExcelReportDataProperties;
+import building.stockapp.repository.FundRepository;
 import building.stockapp.repository.StockRepository;
 import building.stockapp.service.EmailService;
 import building.stockapp.service.ExcelReportService;
@@ -37,6 +39,8 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 	private final ExcelUtil excelUtil;
 
 	private final StockRepository stockRepository;
+
+	private final FundRepository fundRepository;
 
 	private final EmailService emailService;
 
@@ -76,6 +80,44 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 			return excelData;
 		} catch (Exception e) {
 			log.error("Unable to generate stock excel, an exception occured", e);
+			throw new ResourceNotDownloadedException(e.getMessage());
+		}
+	}
+
+	@Override
+	public byte[] generateExcelForFundRecords() {
+		try (XSSFWorkbook workbook = new XSSFWorkbook(); ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			XSSFSheet sheet = workbook.createSheet(excelDataProperties.getFundSheetName());
+			XSSFRow headerRow = sheet.createRow(0);
+			String[] fundSheetHeaders = excelDataProperties.getFundSheetHeaders();
+			int headerColNumber = 0;
+			for (String header : fundSheetHeaders) {
+				XSSFCell cell = headerRow.createCell(headerColNumber++);
+				cell.setCellValue(header);
+				cell.setCellStyle(excelUtil.getStyleForHeaders(workbook));
+			}
+			List<FundTableRowDTO> funds = fundRepository.getAllFundsForTable();
+			int rowNumber = 1;
+			for (FundTableRowDTO fund : funds) {
+				XSSFRow row = sheet.createRow(rowNumber++);
+				String[] entityProperties = fund.toString().split(",");
+				int columnNumber = 0;
+				for (String property : entityProperties) {
+					int tempColNumber = columnNumber++;
+					XSSFCell cell = row.createCell(tempColNumber);
+					fillCell(cell, property);
+					cell.setCellStyle(excelUtil.getStyleForBody(workbook));
+					sheet.autoSizeColumn(tempColNumber);
+				}
+			}
+			workbook.write(baos);
+			byte[] excelData = baos.toByteArray();
+			emailService.sendReportEmail(emailProperties.getFrom(), emailProperties.getTo(), "Fund Report",
+					"Please find the attachment for the Fund Report", "FundReport-" + LocalDate.now() + ".xlsx",
+					excelData);
+			return excelData;
+		} catch (Exception e) {
+			log.error("Unable to generate fund excel, an exception occured", e);
 			throw new ResourceNotDownloadedException(e.getMessage());
 		}
 	}

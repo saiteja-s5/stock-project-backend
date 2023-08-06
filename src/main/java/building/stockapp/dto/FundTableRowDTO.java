@@ -27,4 +27,9 @@ public class FundTableRowDTO {
 		return BigDecimal.valueOf(creditedAmount.doubleValue() - debitedAmount.doubleValue());
 	}
 
+	@Override
+	public String toString() {
+		return transactionDate + "," + creditedAmount + "," + debitedAmount + "," + cashIn;
+	}
+
 }

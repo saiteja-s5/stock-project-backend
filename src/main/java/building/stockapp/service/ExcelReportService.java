@@ -6,4 +6,6 @@ public interface ExcelReportService {
 
 	byte[] generateExcelForStockRecords();
 
+	byte[] generateExcelForFundRecords();
+
 }
