@@ -2,6 +2,7 @@ package building.stockapp.service.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.CellType;
@@ -15,8 +16,10 @@ import org.springframework.util.StopWatch;
 
 import building.stockapp.dto.StockTableRowDTO;
 import building.stockapp.exception.ResourceNotDownloadedException;
+import building.stockapp.model.EmailProperties;
 import building.stockapp.model.ExcelReportDataProperties;
 import building.stockapp.repository.StockRepository;
+import building.stockapp.service.EmailService;
 import building.stockapp.service.ExcelReportService;
 import building.stockapp.utility.ExcelUtil;
 import lombok.AllArgsConstructor;
@@ -34,6 +37,10 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 	private final ExcelUtil excelUtil;
 
 	private final StockRepository stockRepository;
+
+	private final EmailService emailService;
+
+	private final EmailProperties emailProperties;
 
 	@Override
 	public byte[] generateExcelForStockRecords() {
@@ -62,7 +69,11 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 				}
 			}
 			workbook.write(baos);
-			return baos.toByteArray();
+			byte[] excelData = baos.toByteArray();
+			emailService.sendReportEmail(emailProperties.getFrom(), emailProperties.getTo(), "Stock Report",
+					"Please find the attachment for the Stock Report", "StockReport-" + LocalDate.now() + ".xlsx",
+					excelData);
+			return excelData;
 		} catch (Exception e) {
 			log.error("Unable to generate stock excel, an exception occured", e);
 			throw new ResourceNotDownloadedException(e.getMessage());
@@ -88,15 +99,22 @@ public class ExcelReportServiceImpl implements ExcelReportService {
 					String[] entityProperties = listLine.toString().split(",");
 					int columnNumber = 0;
 					for (String property : entityProperties) {
-						XSSFCell cell = row.createCell(columnNumber++);
+						int tempColNumber = columnNumber++;
+						XSSFCell cell = row.createCell(tempColNumber);
 						fillCell(cell, property);
+						cell.setCellStyle(excelUtil.getStyleForBody(workbook));
+						sheet.autoSizeColumn(tempColNumber);
 					}
 				}
 			}
 			workbook.write(baos);
 			stopWatch.stop();
 			log.info(String.format("Excel file generation finished in %d ms", stopWatch.getTotalTimeMillis()));
-			return baos.toByteArray();
+			byte[] excelData = baos.toByteArray();
+			emailService.sendReportEmail(emailProperties.getFrom(), emailProperties.getTo(), "All Data Report",
+					"Please find the attachment for the All Data Report", "Report-" + LocalDate.now() + ".xlsx",
+					excelData);
+			return excelData;
 		} catch (Exception e) {
 			log.error("Unable to generate excel, an exception occured", e);
 			throw new ResourceNotDownloadedException(e.getMessage());

@@ -29,8 +29,9 @@ public class ReportController {
 		byte[] excelData = excelReportService.generateExcelForAllRecords();
 		ByteArrayResource resource = new ByteArrayResource(excelData);
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName)
-				.header("Access-Control-Expose-Headers", "Content-Disposition")
-				.contentLength(excelData.length).contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+				.header("Access-Control-Expose-Headers", "Content-Disposition").contentLength(excelData.length)
+				.contentType(
+						MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
 				.body(resource);
 	}
 
@@ -41,7 +42,9 @@ public class ReportController {
 		ByteArrayResource resource = new ByteArrayResource(excelData);
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName)
 				.header("Access-Control-Expose-Headers", "Content-Disposition").contentLength(excelData.length)
-				.contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(resource);
+				.contentType(
+						MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+				.body(resource);
 	}
 
 }

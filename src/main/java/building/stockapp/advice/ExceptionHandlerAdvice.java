@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import building.stockapp.exception.EmailNotSentException;
 import building.stockapp.exception.ResourceNotAddedException;
 import building.stockapp.exception.ResourceNotDeletedException;
 import building.stockapp.exception.ResourceNotDownloadedException;
@@ -77,6 +78,14 @@ public class ExceptionHandlerAdvice {
 			HttpServletRequest request) {
 		ErrorMessage message = ErrorMessage.builder().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
 				.timestamp(LocalDateTime.now()).message(rnde.getMessage()).path(request.getRequestURI()).build();
+		return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(EmailNotSentException.class)
+	public ResponseEntity<ErrorMessage> handleEmailNotSentException(EmailNotSentException ense,
+			HttpServletRequest request) {
+		ErrorMessage message = ErrorMessage.builder().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
+				.timestamp(LocalDateTime.now()).message(ense.getMessage()).path(request.getRequestURI()).build();
 		return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
