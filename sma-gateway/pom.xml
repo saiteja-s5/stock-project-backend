@@ -10,11 +10,11 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>sma-eureka-server</artifactId>
+	<artifactId>sma-gateway</artifactId>
 	<packaging>war</packaging>
 
-	<name>sma-eureka-server</name>
-	<description>Stock Management Application Eureka Server Module</description>
+	<name>sma-gateway</name>
+	<description>Stock Management Application Gateway Module</description>
 
 	<profiles>
 		<profile>
@@ -42,12 +42,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-gateway</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 	</dependencies>
 
