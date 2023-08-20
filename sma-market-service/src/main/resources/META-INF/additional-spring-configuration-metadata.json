@@ -1,0 +1,32 @@
+{"properties": [
+  {
+    "name": "request.crumb",
+    "type": "java.lang.String",
+    "description": "A description for 'request.crumb'"
+  },
+  {
+    "name": "request.cookie",
+    "type": "java.lang.String",
+    "description": "A description for 'request.cookie'"
+  },
+  {
+    "name": "request.scheme",
+    "type": "java.lang.String",
+    "description": "A description for 'request.scheme'"
+  },
+  {
+    "name": "request.host",
+    "type": "java.lang.String",
+    "description": "A description for 'request.host'"
+  },
+  {
+    "name": "request.quotePath",
+    "type": "java.lang.String",
+    "description": "A description for 'request.quotePath'"
+  },
+  {
+    "name": "request.historicalQuotePath",
+    "type": "java.lang.String",
+    "description": "A description for 'request.historicalQuotePath'"
+  }
+]}
