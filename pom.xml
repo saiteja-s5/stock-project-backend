@@ -25,7 +25,7 @@
 	</properties>
 
 	<modules>
-		<module>sma-inventory</module>
+		<module>sma-inventory-service</module>
 		<module>sma-eureka-server</module>
 		<module>sma-gateway</module>
 	</modules>
