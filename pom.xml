@@ -29,6 +29,7 @@
 		<module>sma-eureka-server</module>
 		<module>sma-gateway</module>
 		<module>sma-market-service</module>
+		<module>sma-email-service</module>
 	</modules>
 
 	<dependencyManagement>
