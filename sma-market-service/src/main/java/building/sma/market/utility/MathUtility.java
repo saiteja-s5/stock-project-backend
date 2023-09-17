@@ -11,13 +11,17 @@ import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MathUtil {
+import org.springframework.beans.factory.annotation.Value;
 
-    public static final int MONTHS_IN_YEAR = 12;
+public class MathUtility {
 
-    public static final Double BROKER_MISC_CHARGES = 10.0;
+    @Value("${utility.broker-misc-charges}")
+    private static Double brokerMiscCharges;
 
-    public static final String MISC_TABLE_PRIMARY_KEY = "MASTER-KEY";
+    @Value("${utility.misc-table-primary-key}")
+    private static String miscTablePrimaryKey;
+
+    private static final int MONTHS_IN_YEAR = 12;
 
     public static final LocalDate STOCK_START_DATE = LocalDate.of(2021, 1, 18);
 
@@ -33,13 +37,13 @@ public class MathUtil {
 
     public static final LocalDate EPOCH_SECOND_EXCEEDS_INTEGER_ON = LocalDate.of(2038, 1, 19);
 
-    private MathUtil() {
+    private MathUtility() {
     }
 
     public static BigDecimal getPercentTarget(Double percent, Period holdDuration, int quantity, Double buyPrice) {
 	int months = holdDuration.getYears() * MONTHS_IN_YEAR + holdDuration.getMonths()
 		+ (holdDuration.getDays() > 0 ? 1 : 0);
-	return roundTo((months * percent * buyPrice * 0.01) + buyPrice + (BROKER_MISC_CHARGES / quantity), 2);
+	return roundTo((months * percent * buyPrice * 0.01) + buyPrice + (brokerMiscCharges / quantity), 2);
     }
 
     public static BigDecimal percentageReturn(Double buyPrice, Double sellPrice) {

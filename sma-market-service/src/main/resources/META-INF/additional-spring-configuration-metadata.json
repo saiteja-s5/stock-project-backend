@@ -28,5 +28,25 @@
     "name": "request.historicalQuotePath",
     "type": "java.lang.String",
     "description": "A description for 'request.historicalQuotePath'"
+  },
+  {
+    "name": "aop.enable-performance-logs",
+    "type": "java.lang.String",
+    "description": "A description for 'aop.enable-performance-logs'"
+  },
+  {
+    "name": "aop.enable-entry-exit-logs",
+    "type": "java.lang.String",
+    "description": "A description for 'aop.enable-entry-exit-logs'"
+  },
+  {
+    "name": "utility.misc-table-primary-key",
+    "type": "java.lang.String",
+    "description": "A description for 'utility.misc-table-primary-key'"
+  },
+  {
+    "name": "utility.broker-misc-charges",
+    "type": "java.lang.String",
+    "description": "A description for 'utility.broker-misc-charges'"
   }
 ]}

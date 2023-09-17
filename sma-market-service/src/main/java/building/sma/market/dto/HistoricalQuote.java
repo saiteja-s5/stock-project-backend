@@ -1,4 +1,4 @@
-package building.sma.market.model;
+package building.sma.market.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
