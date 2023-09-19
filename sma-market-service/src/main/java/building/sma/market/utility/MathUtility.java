@@ -70,7 +70,7 @@ public class MathUtility {
 	return date.toEpochSecond(time, zoneOffSet);
     }
 
-    public static LocalDate epochSecondToLocalDate(int seconds) {
+    public static LocalDate epochSecondToLocalDate(long seconds) {
 	return LocalDate.ofInstant(Instant.ofEpochSecond(seconds), ZoneId.systemDefault());
     }
 

@@ -18,6 +18,11 @@ public class HistoricalQuote {
     private BigDecimal low;
     private BigDecimal close;
     private BigDecimal adjustedClose;
-    private Integer volume;
+    private Long volume;
+
+    @Override
+    public String toString() {
+	return tradedDate + "," + open + "," + close + "," + high + "," + low + "," + adjustedClose + "," + volume;
+    }
 
 }
